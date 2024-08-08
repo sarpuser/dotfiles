@@ -1,0 +1,17 @@
+[user]
+	email = sarpuser@gmail.com
+	name = Sarp User
+[submodule]
+	recurse = true
+[push]
+	recurseSubmodules = on-demand
+[fetch]
+	recurseSubmodules = true
+[status]
+	submoduleSummary = 1 
+[diff]
+	tool = p4merge
+[merge]
+	tool = p4merge
+[difftool]
+	prompt = false

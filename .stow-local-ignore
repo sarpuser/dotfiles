@@ -1,0 +1,8 @@
+.git
+.gitignore
+scripts
+.config/op
+.config/neofetch
+.config/gh
+README.*
+.DS_Store
