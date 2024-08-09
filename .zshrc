@@ -23,6 +23,9 @@ if [[ -d "/Applications/Visual Studio Code.app" ]] then
   export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 fi
 
+# Add local binaries (OMP, Zoxide, etc. to PATH)
+export PATH=$PATH:~/.local/bin
+
 # Activate Oh My Posh
 if [ "$TERM_PROGRAM" != "Apple_Terminal" ]; then
   eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/minimal.toml)"
@@ -88,11 +91,10 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 # Aliases
 [[ -f $HOME/.config/zsh/aliases.zsh ]] && source $HOME/.config/zsh/aliases.zsh
 alias ls='eza --color=always --icons=auto -a'
-alias cd='z'
 alias aliases='nano $HOME/.config/zsh/aliases.zsh && source $HOME/.config/zsh/aliases.zsh'
 alias python='python3'
 alias colortest='curl -sS https://raw.githubusercontent.com/pablopunk/colortest/master/colortest | bash'
 
 # Shell integrations
-source <(fzf --zsh)
-eval "$(zoxide init zsh)"
+source "/usr/share/doc/fzf/examples/completion.zsh"
+eval "$(zoxide init --cmd cd zsh)"
