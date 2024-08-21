@@ -98,7 +98,6 @@ alias colortest='curl -sS https://raw.githubusercontent.com/pablopunk/colortest/
 
 # Shell integrations
 fzfVersion=$(fzf --version | awk '{print $1}')
-printf '0.48.0\n%s\n' "$fzfVersion" | sort -V -C
 if printf '0.48.0\n%s\n' "$fzfVersion" | sort -V -C; then
   # If fzf version is greater than 0.48.0
   source <(fzf --zsh)
