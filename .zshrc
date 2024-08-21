@@ -93,8 +93,17 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 alias ls='eza -a --color=always --icons=auto'
 alias aliases='nano $HOME/.config/zsh/aliases.zsh && source $HOME/.config/zsh/aliases.zsh'
 alias python='python3'
+alias pip='pip3'
 alias colortest='curl -sS https://raw.githubusercontent.com/pablopunk/colortest/master/colortest | bash'
 
 # Shell integrations
-source "/usr/share/doc/fzf/examples/completion.zsh"
+fzfVersion=$(fzf --version | awk '{print $1}')
+printf '0.48.0\n%s\n' "$fzfVersion" | sort -V -C
+if printf '0.48.0\n%s\n' "$fzfVersion" | sort -V -C; then
+  # If fzf version is greater than 0.48.0
+  source <(fzf --zsh)
+else
+  source "/usr/share/doc/fzf/examples/completion.zsh"
+fi
+
 eval "$(zoxide init --cmd cd zsh)"
