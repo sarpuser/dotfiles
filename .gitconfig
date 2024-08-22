@@ -1,0 +1,17 @@
+[user]
+	email = sarpuser@gmail.com
+	name = Sarp User
+[submodule]
+	recurse = true
+[push]
+	recurseSubmodules = on-demand
+[fetch]
+	recurseSubmodules = true
+[status]
+	submoduleSummary = 1
+[credential "https://github.com"]
+	helper =
+	helper = "!f() { if [ \"$(uname -s)\" = Linux ]; then /usr/bin/gh auth git-credential \"$@\"; else /opt/homebrew/bin/gh auth git-credential \"$@\"; fi; };f"
+[credential "https://gist.github.com"]
+	helper =
+	helper = "!f() { if [ \"$(uname -s)\" = Linux ]; then /usr/bin/gh auth git-credential \"$@\"; else /opt/homebrew/bin/gh auth git-credential \"$@\"; fi; };f"

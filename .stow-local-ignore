@@ -1,6 +1,5 @@
 .git
 .gitignore
-.gitconfig
 scripts
 .config/op
 .config/neofetch
