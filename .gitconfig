@@ -15,3 +15,9 @@
 [credential "https://gist.github.com"]
 	helper =
 	helper = "!f() { if [ \"$(uname -s)\" = Linux ]; then /usr/bin/gh auth git-credential \"$@\"; else /opt/homebrew/bin/gh auth git-credential \"$@\"; fi; };f"
+[core]
+	pager = delta
+[include]
+	path = ~/.config/delta-diff/themes.gitconfig
+[delta]
+	features = platypus
