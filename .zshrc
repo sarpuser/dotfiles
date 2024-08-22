@@ -94,6 +94,7 @@ alias ls='eza -a --color=always --icons=auto'
 alias aliases='nano $HOME/.config/zsh/aliases.zsh && source $HOME/.config/zsh/aliases.zsh'
 alias python='python3'
 alias pip='pip3'
+alias diff='delta'
 alias colortest='curl -sS https://raw.githubusercontent.com/pablopunk/colortest/master/colortest | bash'
 
 # Shell integrations
