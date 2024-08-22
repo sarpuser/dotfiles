@@ -21,3 +21,4 @@
 	path = ~/.config/delta-diff/themes.gitconfig
 [delta]
 	features = platypus
+	hyperlinks = true
