@@ -2,3 +2,5 @@
 .config/op
 .config/neofetch
 .config/gh
+.config/zsh/aliases.zsh
+**/test*
