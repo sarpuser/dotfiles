@@ -84,9 +84,9 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # Aliases
-[[ -f $HOME/.config/zsh/aliases.zsh ]] && source $HOME/.config/zsh/aliases.zsh
-alias ls='eza -a --color=always --icons=auto'
-alias aliases='nano $HOME/.config/zsh/aliases.zsh && source $HOME/.config/zsh/aliases.zsh'
+[[ -f $HOME/.config/zsh/aliases.zsh ]] && source "$HOME/.config/zsh/aliases.zsh"
+alias ls='eza -la --color=always --icons=auto'
+alias aliases='([[ -d $HOME/.config/zsh/ ]] || mkdir -p $HOME/.config/zsh) && nano $HOME/.config/zsh/aliases.zsh && source $HOME/.config/zsh/aliases.zsh'
 alias python='python3'
 alias pip='pip3'
 alias diff='delta'
