@@ -26,13 +26,16 @@ if [ "$TERM_PROGRAM" != "Apple_Terminal" ]; then
   eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/minimal.toml)"
 fi
 
+# Load plugin settings
+source "$HOME/.config/zsh/zsh-tab-title.zsh"
+
 # Add in zsh plugins
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
-# zinit light jirutka/zsh-shift-select
-zinit light ~/Documents/Development/zsh-shift-select
+zinit light trystan2k/zsh-tab-title
+zinit light sarpuser/zsh-shift-select
 
 # Add OMZ Plugins
 # zinit snippet OMZP::git
