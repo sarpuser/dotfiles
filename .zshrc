@@ -13,7 +13,7 @@ autoload -Uz _zinit
 ### End of Zinit's installer chunk
 
 # Add Homebrew apps to path
-if [[ -f "/opt/homebrew/bin/brew" ]] then
+if [[ -f "/opt/homebrew/bin/brew" ]]; then
   # If you're using macOS, you'll want this enabled
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
@@ -47,6 +47,7 @@ autoload -Uz compinit && compinit
 
 zinit cdreplay -q
 
+# FIXME: This deletes the whole line rather than before cursor
 # Keybindings
 function backward-kill-line() {
   zle set-mark-command -w
