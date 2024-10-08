@@ -18,11 +18,6 @@ if [[ -f "/opt/homebrew/bin/brew" ]] then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
-# Add VS Code CLI to path (on macos)
-if [[ -d "/Applications/Visual Studio Code.app" ]] then
-  export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-fi
-
 # Add local binaries (OMP, Zoxide, etc. to PATH)
 export PATH=$PATH:~/.local/bin
 
