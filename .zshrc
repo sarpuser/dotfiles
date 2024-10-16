@@ -22,8 +22,10 @@ fi
 export PATH=$PATH:~/.local/bin
 
 # Activate Oh My Posh
-if [ "$TERM_PROGRAM" != "Apple_Terminal" ]; then
+if [[ $(tty) =~ ^/dev/pts ]]; then
   eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/minimal.toml)"
+else
+  eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/tty.toml)"
 fi
 
 # Load plugin settings

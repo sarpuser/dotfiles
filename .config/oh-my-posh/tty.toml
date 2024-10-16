@@ -2,7 +2,6 @@
 
 version = 2
 final_space = true
-console_title_template = '{{ .Shell }} in {{ .Folder }}'
 
 [[blocks]]
   type = 'prompt'
@@ -10,26 +9,33 @@ console_title_template = '{{ .Shell }} in {{ .Folder }}'
   newline = true
 
   [[blocks.segments]]
+    type = "shell"
+    style = "plain"
+    template = "{{ if gt .Name \"zsh\"}}{{ .Name }}{{ end }} "
+
+  [[blocks.segments]]
     type = "session"
     style = "plain"
-    foreground = "magenta"
-    template = "{{ .UserName }}@{{.HostName}}"
+    foreground = "lightYellow"
+    background = "transparent"
+    template = "{{ .UserName }}@{{.HostName}} <7>in</>"
 
   [[blocks.segments]]
     type = 'path'
     style = 'plain'
+    foreground = 'yellow'
     background = 'transparent'
-    foreground = 'blue'
     template = ' {{ .Path }}'
 
     [blocks.segments.properties]
       style = 'full'
+      mapped_locations_enabled = false
 
   [[blocks.segments]]
     type = 'python'
     style = 'plain'
-    foreground = 'yellow'
-    template = ' {{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ if .Venv }} ({{ .Venv }}){{ else }}{{ end }}{{ end }}'
+    foreground = 'lightYellow'
+    template = ' {{ if .Error }}{{ .Error }}{{ else }}Python {{ .Full }}{{ if .Venv }} ({{ .Venv }}){{ else }}{{ end }}{{ end }}'
 
       [blocks.segments.properties]
         folder_name_fallback = false
@@ -38,12 +44,12 @@ console_title_template = '{{ .Shell }} in {{ .Folder }}'
   [[blocks.segments]]
     type = 'git'
     style = 'plain'
-    foreground = 'p:grey'
+    foreground = 'cyan'
     background = 'transparent'
-    template = ' {{ .HEAD }}{{ if or (.Working.Changed) (.Staging.Changed) }}*{{ end }} <cyan>{{ if gt .Behind 0 }}⇣{{ end }}{{ if gt .Ahead 0 }}⇡{{ end }}</>'
+    template = ' {{ .HEAD }}{{ if or (.Working.Changed) (.Staging.Changed) }}*{{ end }} {{ if gt .Behind 0 }}{{ .Behind }}«{{ end }}{{ if gt .Ahead 0 }}»{{ .Ahead }}{{ end }}'
 
     [blocks.segments.properties]
-      branch_icon = ' '
+      branch_icon = ''
       commit_icon = '@'
       fetch_status = true
 
@@ -54,7 +60,7 @@ console_title_template = '{{ .Shell }} in {{ .Folder }}'
   [[blocks.segments]]
     type = 'executiontime'
     style = 'plain'
-    foreground = 'yellow'
+    foreground = 'lightYellow'
     background = 'transparent'
     template = '{{ .FormattedMs }}'
 
@@ -74,7 +80,8 @@ console_title_template = '{{ .Shell }} in {{ .Folder }}'
       "{{if eq .Code 0}}magenta{{end}}",
     ]
     background = 'transparent'
-    template = '> '
+    template = "<b>└-></b>"
+
 
 [transient_prompt]
   foreground_templates = [
@@ -82,9 +89,10 @@ console_title_template = '{{ .Shell }} in {{ .Folder }}'
     "{{if eq .Code 0}}magenta{{end}}",
   ]
   background = 'transparent'
-  template = '> '
+  template = '<b>> </b>'
 
 [secondary_prompt]
   foreground = 'magenta'
   background = 'transparent'
-  template = '>> '
+  template = '<b>└->></b>'
+			
