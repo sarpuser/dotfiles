@@ -1,108 +1,87 @@
-# Sarp's Linux and Mac dotfiles and setup scripts
-
-- [Overview](#overview)
-- [Setup](#setup)
-- [Reference](#reference)
-  - [Installed Applications](#installed-applications)
-  - [GNU Stow](#gnu-stow)
-
 ## Overview
-The scripts in the [dotfiles/scripts](/scripts) directory will install all required dependencies, clone this repository and symlink the configuration files using [GNU Stow.](https://www.gnu.org/software/stow/manual/stow.html) Linux scripts that have `desktop` in the name should be used for setting up new desktop environments. To run the scripts go to [setup.](#setup)
+This repository includes configuration files for various programs, as well as setup scripts for Mac and Debian that download all the dependencies and any desired applications, set settings, and copy this dotfiles repository.
 
-## Setup
+### Using the dotfiles without any additional setup
+```bash
+git clone https://www.github.com/sarpuser/dotfiles ~/dotfiles
+stow -d ~/dotfiles .
+```
+
+#### Requirements
+  - [GNU Stow](#gnu-stow)
+  - [Hack Nerd Font](https://www.nerdfonts.com/)
+  - [Oh-My-Posh](https://ohmyposh.dev/)
+
+> [!IMPORTANT]
+> If using a different terminal emulator, its font should be changed to the Nerd font.
+
+## Setup Scripts
+
+### Mac
+This script will install Homebrew (if not already installed), install brew & App Store apps, set up terminal environment by cloning this repository, and change settings. The Homebrew apps include desktop apps and if these are found on the Applications directory (installed from a website perhaps), the script will replace the executables with the Homebrew version without app data loss. Each of the script components (Homebrew & apps, terminal, and settings) are opt-in and safe to run multiple times.
+
+```bash
+curl -fsS https://raw.githubusercontent.com/sarpuser/dotfiles/main/scripts/mac-setup.sh | /bin/bash
+```
 
 <details>
-  <summary>Only CLI Applications</summary>
+<summary>Installed Apps</summary>
 
-  ```bash
-  sudo -E curl -S https://raw.githubusercontent.com/sarpuser/dotfiles/main/scripts/setup.sh | bash
-  ```
-
-</details>
-
-<details>
-  <summary>CLI & Desktop Applications (No Desktop Environment)</summary>
-
-  ```bash
-  sudo -E curl -S https://raw.githubusercontent.com/sarpuser/dotfiles/main/scripts/setup.sh | bash /dev/stdin --desktop-apps
-  ```
-
-</details>
-
-<details>
-  <summary>Desktop Environment & All Apps</summary>
-  <br>
-
-  This script will set up brand new desktop environment. This should only be used for headless systems that will be transitioned to a monitor setup.
-  ```bash
-  sudo -E curl -S https://raw.githubusercontent.com/sarpuser/dotfiles/main/scripts/setup.sh | bash /dev/stdin --desktop-env
-  ```
-
+  - [1Password](https://1password.com/)
+  - [Alacritty](https://alacritty.org/index.html)
+  - [Alfred](https://www.alfredapp.com/)
+  - [Arc Browser](https://arc.net/)
+  - [App Cleaner](https://freemacsoft.net/appcleaner/)
+  - [Balena Etcher](https://etcher.balena.io/)
+  - [Bartender](https://www.macbartender.com/Bartender5/)
+  - \[Optional\] [Discord](https://www.discord.com)
+  - [eza](https://github.com/eza-community/eza)
+  - [Hack Nerd Font](https://www.nerdfonts.com/)
+  - [Hand Mirror](https://handmirror.app/)
+  - [fping](https://fping.org/)
+  - [fzf](https://github.com/junegunn/fzf)
+  - [gh](https://cli.github.com/)
+  - git
+  - [git-delta](https://github.com/dandavison/delta)
+  - \[Optional\] [KeepingYouAwake](https://keepingyouawake.app/)
+  - [Keyboard Clean Tool](https://folivora.ai/keyboardcleantool)
+  - [Logi Options+](https://www.logitech.com/en-us/software/logi-options-plus.html)
+  - [Magnet](https://magnet.crowdcafe.com/)
+  - [mas](https://github.com/mas-cli/mas)
+  - [neofetch](https://github.com/dylanaraps/neofetch)
+  - [Oh My Posh](https://ohmyposh.dev/)
+  - [picocom](https://github.com/npat-efault/picocom)
+  - \[Optional\] [Private Internet Access](https://www.privateinternetaccess.com/)
+  - python
+  - [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
+  - [Rust & Rustup](https://www.rust-lang.org/)
+  - [shellcheck](https://www.shellcheck.net/)
+  - [Spark Mail](https://sparkmailapp.com/)
+  - [Speedtest CLI](https://www.speedtest.net/apps/cli)
+  - [Spotify](https://open.spotify.com/)
+  - \[Optional\] [Steam](https://www.steamdeck.com/en/)
+  - [GNU Stow](https://www.gnu.org/software/stow/)
+  - [Visual Studio Code](https://code.visualstudio.com/)
+  - [UTM](https://mac.getutm.app/)
+  - [Wireguard Go](https://github.com/WireGuard/wireguard-go)
+  - [zoxide](https://github.com/ajeetdsouza/zoxide)
 </details>
 
 ## Reference
-### Installed Applications
-<details>
-<summary>CLI Applications</summary>
+### [GNU Stow](https://www.gnu.org/software/stow/manual/stow.html)
+Stow manages symlinks for all the files in the dotfiles repository. By default it creates symlinks for the selected "packages" (the dotfiles in this case) in the parent directory. For `~/dotfiles/.zshrc`, stow would create the symlink `~/.zshrc`. Likewise, for `~/dotfiles/.config/alacritty` it would create `~/.config/alacritty`.
 
-  - git
-  - Python3
-  - Python3-venv
-  - zsh
-  - [Zinit](https://zdharma-continuum.github.io/zinit/wiki/INTRODUCTION/) - zsh plugin manager
-  - [Oh My Posh](https://ohmyposh.dev/docs) - multi shell prompt manager
-  - [zoxide](https://github.com/ajeetdsouza/zoxide/tree/main) - Better `cd`
-  - [fzf](https://github.com/junegunn/fzf) - Fuzzy search
-  - [git-delta](https://github.com/dandavison/delta) - CLI diff tool
-  - [eza](https://github.com/eza-community/eza?tab=readme-ov-file) - Better `ls`
-  - [GNU Stow](#gnu-stow) - Dotfile management
-  - Speedtest CLI
-  - [Hack Nerd Font](https://github.com/source-foundry/Hack)
-  - Homebrew **(Mac only)** - Mac package manager
+#### Syntax
+```bash
+stow [options] package
+```
+> [!NOTE]
+> The `package` in the stow syntax is in relation to the stow directory (see below). Using `.` would mean all the packages in the stow directory, NOT the current directory.
 
-</details>
-
-<details>
-<summary>zsh plugins</summary>
-
-  - zsh syntax highlighting
-  - zsh completions
-  - zsh autosuggestions
-  - fzf-tab
-  - zsh shift select
-  - [Oh My Zsh: git](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git)
-  - [Oh My Zsh: sudo](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/sudo) - Double tap `Esc` to add sudo to last command if prompt empty or current command that is being typed
-  - [Oh My Zsh: macos](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/macos) **(Mac only)**
-    - `ofd`: Open passed directories (or $PWD by default) in Finder
-    - `cdf`: `cd` to the current Finder directory
-    - `pfd`: Return the path of the frontmost Finder window
-    - `quick-look`: Quick-Look a specified file
-    - `man-preview`: Open man pages in Preview app
-    - `rmdsstore`: Remove `.DS_Store` files recursively in a directory
-
-</details>
-
-<details>
-  <summary>Desktop Applications</summary>
-
-  - [Alacritty Terminal](https://alacritty.org/)
-  - p4merge - Merge & diff tool
-    - Despite git-delta being installed, p4merge is set as git diff tool, since it is graphical
-  - Arc Browser (Mac only)
-  - Alfred (Mac only)
-  - Keeping you awake (Mac only)
-  - Bartender (Mac only)
-  - 1Password (Mac only)
-  - UTM (Mac only) - VM Hypervisor
-  - Discord (Mac only)
-  - Spotify (Mac only)
-</details>
-
-<details>
-  <summary>Desktop Environment</summary>
-
-  WIP
-
-</details>
-
-### GNU Stow
+#### Options
+- `-d`: Stow directory (directory where all the "packages" are stored)
+  - Default: Current directory
+- `-t`: Target directory (where all the symlinks will be created)
+  - Default: Parent of stow directory
+- `-R`: Restow (delete all symlinks and recreate them)
+- `-D`: Delete all symlinks
