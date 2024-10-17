@@ -95,4 +95,4 @@ final_space = true
   foreground = 'magenta'
   background = 'transparent'
   template = '<b>└->></b>'
-			
+

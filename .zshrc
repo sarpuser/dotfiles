@@ -22,10 +22,10 @@ fi
 export PATH=$PATH:~/.local/bin
 
 # Activate Oh My Posh
-if [[ $(tty) =~ ^/dev/pts ]]; then
-  eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/minimal.toml)"
+if [[ $(tty) =~ /dev/pts || -n $TERM_PROGRAM ]]; then
+  eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/omp-emulator.toml)"
 else
-  eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/tty.toml)"
+  eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/omp-tty.toml)"
 fi
 
 # Load plugin settings

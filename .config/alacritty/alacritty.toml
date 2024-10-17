@@ -18,6 +18,7 @@ shape = "Beam"
 
 [env]
 TERM = "alacritty"
+TERM_PROGRAM = "alacritty"
 
 [font]
 size = 14
