@@ -1,3 +1,4 @@
 **/.DS_Store
 .config/zsh/aliases.zsh
 **/test*
+.config/zsh/zsh-plugins.zsh

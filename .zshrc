@@ -1,16 +1,12 @@
-### Added by Zinit's installer
-if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
-    print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
-    command mkdir -p "$HOME/.local/share/zinit" && command chmod g-rwX "$HOME/.local/share/zinit"
-    command git clone https://github.com/zdharma-continuum/zinit "$HOME/.local/share/zinit/zinit.git" && \
-        print -P "%F{33} %F{34}Installation successful.%f%b" || \
-        print -P "%F{160} The clone has failed.%f%b"
+### Antidote installer
+if [[ ! -d "$HOME/.antidote" ]]; then
+  echo Installing Antidote...
+  git clone --depth=1 https://github.com/mattmc3/antidote.git "$HOME/.antidote"
 fi
-
-source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
-autoload -Uz _zinit
-(( ${+_comps} )) && _comps[zinit]=_zinit
-### End of Zinit's installer chunk
+source "$HOME/.antidote/antidote.zsh"
+zstyle ':antidote:bundle' file "$HOME/.config/zsh/zsh-plugins.txt"
+antidote load
+### End of Antidote installer
 
 # Add Homebrew apps to path
 if [[ -f "/opt/homebrew/bin/brew" ]]; then
@@ -20,6 +16,9 @@ fi
 
 # Add local binaries (OMP, Zoxide, etc. to PATH)
 export PATH=$PATH:~/.local/bin
+
+# Add Cargo binaries to PATH
+export PATH=$PATH:~/.cargo/bin
 
 # Activate Oh My Posh
 if [[ $(tty) =~ /dev/pts || -n $TERM_PROGRAM ]]; then
@@ -31,26 +30,13 @@ fi
 # Load plugin settings
 source "$HOME/.config/zsh/zsh-tab-title.zsh"
 
-# Add in zsh plugins
-zinit light zsh-users/zsh-syntax-highlighting
-zinit light zsh-users/zsh-completions
-zinit light zsh-users/zsh-autosuggestions
-zinit light Aloxaf/fzf-tab
-zinit light trystan2k/zsh-tab-title
-zinit light sarpuser/zsh-shift-select
-
-# Add OMZ Plugins
-# zinit snippet OMZP::git
-zinit snippet OMZP::sudo
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  # This snippet will only be installed on mac
-  zinit snippet OMZP::macos
-fi
+# if [[ "$OSTYPE" == "darwin"* ]]; then
+#   # This snippet will only be installed on mac
+#   antidote install ohmyzsh/ohmyzsh path:plugins/macos
+# fi
 
 # Load completions
 autoload -Uz compinit && compinit
-
-zinit cdreplay -q
 
 # FIXME: This deletes the whole line rather than before cursor
 # Keybindings
@@ -93,8 +79,8 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 [[ -f $HOME/.config/zsh/aliases.zsh ]] && source "$HOME/.config/zsh/aliases.zsh"
 alias ls='eza -laa --color=always --icons=auto'
 alias aliases='nano $HOME/.config/zsh/aliases.zsh && source $HOME/.config/zsh/aliases.zsh'
-alias python='python3'
-alias pip='pip3'
+alias venv-new="python -m venv .venv"
+alias venv="source .venv/bin/activate"
 alias diff='delta'
 alias colortest='curl -sS https://raw.githubusercontent.com/pablopunk/colortest/master/colortest | bash'
 
@@ -107,4 +93,5 @@ else
   source "/usr/share/doc/fzf/examples/completion.zsh"
 fi
 
+zsh-defer eval "$(pyenv init -)"
 eval "$(zoxide init --cmd cd zsh)"

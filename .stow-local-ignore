@@ -4,3 +4,4 @@ scripts
 README.*
 .DS_Store
 .config/zsh/aliases.zsh
+.config/zsh/zsh-plugins.zsh
