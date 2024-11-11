@@ -28,12 +28,15 @@ curl -fsS https://raw.githubusercontent.com/sarpuser/dotfiles/main/scripts/mac-s
 <summary>Installed Apps</summary>
 
   - [1Password](https://1password.com/)
+  - [1Password CLI](https://developer.1password.com/docs/cli/get-started/) # needed for Alfred
   - [Alacritty](https://alacritty.org/index.html)
+  - [AlDente](https://apphousekitchen.com/)
   - [Alfred](https://www.alfredapp.com/)
   - [Arc Browser](https://arc.net/)
   - [App Cleaner](https://freemacsoft.net/appcleaner/)
   - [Balena Etcher](https://etcher.balena.io/)
   - [Bartender](https://www.macbartender.com/Bartender5/)
+  - [Better Display](https://github.com/waydabber/BetterDisplay)
   - \[Optional\] [Discord](https://www.discord.com)
   - [eza](https://github.com/eza-community/eza)
   - [Hack Nerd Font](https://www.nerdfonts.com/)
@@ -46,13 +49,13 @@ curl -fsS https://raw.githubusercontent.com/sarpuser/dotfiles/main/scripts/mac-s
   - \[Optional\] [KeepingYouAwake](https://keepingyouawake.app/)
   - [Keyboard Clean Tool](https://folivora.ai/keyboardcleantool)
   - [Logi Options+](https://www.logitech.com/en-us/software/logi-options-plus.html)
-  - [Magnet](https://magnet.crowdcafe.com/)
   - [mas](https://github.com/mas-cli/mas)
+  - [Mission Control Plus](https://www.fadel.io/missioncontrolplus)
   - [neofetch](https://github.com/dylanaraps/neofetch)
   - [Oh My Posh](https://ohmyposh.dev/)
   - [picocom](https://github.com/npat-efault/picocom)
   - \[Optional\] [Private Internet Access](https://www.privateinternetaccess.com/)
-  - python
+  - pyenv
   - [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
   - [Rust & Rustup](https://www.rust-lang.org/)
   - [shellcheck](https://www.shellcheck.net/)
@@ -60,6 +63,7 @@ curl -fsS https://raw.githubusercontent.com/sarpuser/dotfiles/main/scripts/mac-s
   - [Speedtest CLI](https://www.speedtest.net/apps/cli)
   - [Spotify](https://open.spotify.com/)
   - \[Optional\] [Steam](https://www.steamdeck.com/en/)
+  - [Things](https://apps.apple.com/us/app/things-3/id904280696?mt=12)
   - [GNU Stow](https://www.gnu.org/software/stow/)
   - [Visual Studio Code](https://code.visualstudio.com/)
   - [UTM](https://mac.getutm.app/)
@@ -70,6 +74,8 @@ curl -fsS https://raw.githubusercontent.com/sarpuser/dotfiles/main/scripts/mac-s
 ## Reference
 ### [GNU Stow](https://www.gnu.org/software/stow/manual/stow.html)
 Stow manages symlinks for all the files in the dotfiles repository. By default it creates symlinks for the selected "packages" (the dotfiles in this case) in the parent directory. For `~/dotfiles/.zshrc`, stow would create the symlink `~/.zshrc`. Likewise, for `~/dotfiles/.config/alacritty` it would create `~/.config/alacritty`.
+
+Any files/folders that stow should not create symlinks for can be placed in [`.stow-local-ignore`](/.stow-local-ignore)
 
 #### Syntax
 ```bash
