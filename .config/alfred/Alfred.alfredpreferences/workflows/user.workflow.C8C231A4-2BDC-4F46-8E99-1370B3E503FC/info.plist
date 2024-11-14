@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>sarpuser.ghraw</string>
+	<key>category</key>
+	<string>Internet</string>
+	<key>connections</key>
+	<dict>
+		<key>3BEB301D-31A7-4406-9507-C6EE6AC994F6</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>27D929E0-64E0-489D-9F9A-70A678AB44D7</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>749A0A64-E418-475C-9F50-E623CA809E3F</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>3BEB301D-31A7-4406-9507-C6EE6AC994F6</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>27D929E0-64E0-489D-9F9A-70A678AB44D7</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Sarp User</string>
+	<key>description</key>
+	<string>Get the link to the raw file on GitHub from file blob link in GitHub</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Get GH Raw Link</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>browser</key>
+				<string></string>
+				<key>skipqueryencode</key>
+				<false/>
+				<key>skipvarencode</key>
+				<false/>
+				<key>spaces</key>
+				<string></string>
+				<key>url</key>
+				<string></string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>3BEB301D-31A7-4406-9507-C6EE6AC994F6</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>escaping</key>
+				<integer>68</integer>
+				<key>keyword</key>
+				<string>gh</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>import pyperclip
+import json
+import validators
+
+# Get the argument passed with the keyword (empty string if nothing passed)
+
+clipboard_text = None
+match = None
+validURL = False
+
+items_dict = {
+    'items': [
+        {
+            'title': '',
+            'subtitle': 'Copy to clipboard',
+            'arg': '',
+            'icon': {
+                'path': './icon.png'
+            },
+            'valid': False,
+            'mods': {
+                'cmd': {
+                    'subtitle': 'Launch in web browser and copy to clipboard'
+                }
+            }
+        }
+    ]
+}
+
+item = items_dict['items'][0]
+
+try:
+    # Check if there's content in the clipboard
+    clipboard_text = pyperclip.paste()
+
+    if validators.url(clipboard_text):
+        validURL = True
+    else:
+        item['title'] = 'Clipboard is not a valid URL'
+
+except:
+    item['title'] = 'Clipboard empty'
+
+
+if validURL and 'github.com' in clipboard_text and '/blob/' in clipboard_text:
+    # Use clipboard content if no argument provided
+    path_elements = clipboard_text.split('/')[3:]
+    path_elements.pop(2)
+    raw_file_path = 'https://raw.githubusercontent.com/'
+    for path in path_elements:
+        raw_file_path += path
+        raw_file_path += '/'
+    raw_file_path = raw_file_path[:-1]
+    item['title'] = raw_file_path
+    item['arg'] = raw_file_path
+    item['valid'] = True
+    item['text'] = {
+        'copy': raw_file_path,
+        'largetype': raw_file_path
+    }
+else:
+    item['title'] = 'Copied URL is not a file on GitHub'
+    validURL = False
+
+if not validURL:
+    item['subtitle'] = ''
+    item['icon'] = {
+        'path': './invalid.png'
+    }
+    item['mods'] = {}
+
+items_json = json.dumps(items_dict)
+
+print (items_json)</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string></string>
+				<key>type</key>
+				<integer>9</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>749A0A64-E418-475C-9F50-E623CA809E3F</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>autopaste</key>
+				<false/>
+				<key>clipboardtext</key>
+				<string>{query}</string>
+				<key>ignoredynamicplaceholders</key>
+				<false/>
+				<key>transient</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.clipboard</string>
+			<key>uid</key>
+			<string>27D929E0-64E0-489D-9F9A-70A678AB44D7</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string></string>
+	<key>uidata</key>
+	<dict>
+		<key>27D929E0-64E0-489D-9F9A-70A678AB44D7</key>
+		<dict>
+			<key>xpos</key>
+			<real>535</real>
+			<key>ypos</key>
+			<real>200</real>
+		</dict>
+		<key>3BEB301D-31A7-4406-9507-C6EE6AC994F6</key>
+		<dict>
+			<key>xpos</key>
+			<real>305</real>
+			<key>ypos</key>
+			<real>70</real>
+		</dict>
+		<key>749A0A64-E418-475C-9F50-E623CA809E3F</key>
+		<dict>
+			<key>xpos</key>
+			<real>65</real>
+			<key>ypos</key>
+			<real>175</real>
+		</dict>
+	</dict>
+	<key>userconfigurationconfig</key>
+	<array/>
+	<key>webaddress</key>
+	<string></string>
+</dict>
+</plist>

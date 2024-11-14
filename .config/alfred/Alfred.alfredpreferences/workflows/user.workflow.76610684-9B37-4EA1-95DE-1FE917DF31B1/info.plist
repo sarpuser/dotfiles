@@ -1,0 +1,649 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>sarpuser.alfred.baseconverter</string>
+	<key>category</key>
+	<string>Productivity</string>
+	<key>connections</key>
+	<dict>
+		<key>45E5A95C-3F6A-4C04-B3A0-BF866476F8E7</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6ED6DFF5-8D61-4BCC-B9F6-7EF7B4F875DE</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>67CA1F17-0126-4A53-AD36-57D064D53876</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6ED6DFF5-8D61-4BCC-B9F6-7EF7B4F875DE</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>8AAC8255-3D38-4A2B-A191-56A1A7CB8600</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6ED6DFF5-8D61-4BCC-B9F6-7EF7B4F875DE</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>DD111221-2E1E-4A44-81B9-00EE7CCBE1C3</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6ED6DFF5-8D61-4BCC-B9F6-7EF7B4F875DE</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Sarp User</string>
+	<key>description</key>
+	<string></string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Base Converter</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>68</integer>
+				<key>keyword</key>
+				<string>hex</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>import sys
+import json
+
+items_dict = {
+	'items': []
+}
+
+items = items_dict['items']
+
+inputValue = sys.argv[1]
+if '0x' not in inputValue:
+	inputValue = '0x' + inputValue
+
+try:
+	decResult = int(inputValue, base=16)
+	try:
+		signedDecResult = int.from_bytes(decResult.to_bytes(length=1, byteorder='little'), signed=True, byteorder='little')
+	except OverflowError:
+		signedDecResult = 'Value too large to convert to signed integer'
+	binResult = bin(decResult)
+	octResult = oct(decResult)
+
+	decResultStr = 'Decimal: ' + str(decResult)
+	signedDecResultStr = 'Signed Decimal: ' + str(signedDecResult)
+	binResultStr = 'Binary: ' + binResult[2:]
+	octResultStr = 'Octal: ' + octResult[2:]
+
+	items.append({
+		'title': decResultStr,
+		'subtitle': 'Copy to clipboard',
+		'valid': True,
+		'icon': {
+			'path': './images/decimal.png'
+		},
+		'arg': decResult
+	})
+
+	if type(signedDecResult) == int:
+		items.append({
+			'title': signedDecResultStr,
+			'subtitle': 'Copy to clipboard',
+			'valid': True,
+			'icon': {
+				'path': './images/plus-minus.png'
+			},
+			'arg': signedDecResult
+		})
+
+	items.append({
+		'title': binResultStr,
+		'subtitle': 'Copy to clipboard',
+		'valid': True,
+		'icon': {
+			'path': './images/binary.png'
+		},
+		'arg': binResult
+	})
+
+	items.append({
+		'title': octResultStr,
+		'subtitle': 'Copy to clipboard',
+		'valid': True,
+		'icon': {
+			'path': './images/8.png'
+		},
+		'arg': octResult
+	})
+
+except Exception as e:
+	print(e)
+	items_dict['items'] = [{
+		'title': 'Invalid hex number',
+		'valid': False,
+		'icon': {
+			'path': './images/invalid_conversion.png'
+		}
+	}]
+
+items_json = json.dumps(items_dict)
+
+print(items_json)</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>Convert from hexadecimal</string>
+				<key>type</key>
+				<integer>9</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>67CA1F17-0126-4A53-AD36-57D064D53876</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>68</integer>
+				<key>keyword</key>
+				<string>dec</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>import sys
+import json
+
+items_dict = {
+	'items': []
+}
+
+items = items_dict['items']
+
+try:
+	inputValue = int(sys.argv[1])
+
+	if inputValue &gt; 0:
+		hexResult = f'0x{inputValue:X}'
+		binResult = bin(inputValue)
+		octResult = oct(inputValue)
+	else:
+		signedBytesInt = int.from_bytes(inputValue.to_bytes(signed=True, length=1, byteorder='little'), byteorder='little')
+		hexResult = f'0x{signedBytesInt:X}'
+		binResult = bin(signedBytesInt)
+		octResult = oct(signedBytesInt)
+
+	hexResultStr = 'Hexadecimal: ' + hexResult
+	binResultStr = 'Binary: ' + binResult[2:]
+	octResultStr = 'Octal: ' + octResult[2:]
+
+	items.append({
+		'title': hexResultStr,
+		'subtitle': 'Copy to clipboard',
+		'valid': True,
+		'icon': {
+			'path': './images/hex.png'
+		},
+		'arg': hexResult
+	})
+
+	items.append({
+		'title': binResultStr,
+		'subtitle': 'Copy to clipboard',
+		'valid': True,
+		'icon': {
+			'path': './images/binary.png'
+		},
+		'arg': binResult
+	})
+
+	items.append({
+		'title': octResultStr,
+		'subtitle': 'Copy to clipboard',
+		'valid': True,
+		'icon': {
+			'path': './images/8.png'
+		},
+		'arg': octResult
+	})
+
+except OverflowError:
+	items_dict['items'] = [{
+		'title': 'Value too large for a signed number ',
+		'valid': False,
+		'icon': {
+			'path': './images/invalid_conversion.png'
+		}
+	}]
+
+except:
+	items_dict['items'] = [{
+		'title': 'Invalid number',
+		'valid': False,
+		'icon': {
+			'path': './images/invalid_conversion.png'
+		}
+	}]
+
+items_json = json.dumps(items_dict)
+
+print(items_json)</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>Convert from decimal</string>
+				<key>type</key>
+				<integer>9</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>8AAC8255-3D38-4A2B-A191-56A1A7CB8600</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>autopaste</key>
+				<false/>
+				<key>clipboardtext</key>
+				<string>{query}</string>
+				<key>ignoredynamicplaceholders</key>
+				<false/>
+				<key>transient</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.clipboard</string>
+			<key>uid</key>
+			<string>6ED6DFF5-8D61-4BCC-B9F6-7EF7B4F875DE</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>68</integer>
+				<key>keyword</key>
+				<string>bin</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>import sys
+import json
+
+items_dict = {
+	'items': []
+}
+
+items = items_dict['items']
+
+inputValue = sys.argv[1]
+if '0b' not in inputValue:
+	inputValue = '0b' + inputValue
+
+try:
+	decResult = int(inputValue, base=2)
+	try:
+		signedDecResult = int.from_bytes(decResult.to_bytes(length=1, byteorder='little'), signed=True, byteorder='little')
+	except OverflowError:
+		signedDecResult = 'Value too large to convert to signed integer'
+	hexResult = f'0x{decResult:X}'
+	octResult = oct(decResult)
+
+	decResultStr = 'Decimal: ' + str(decResult)
+	signedDecResultStr = 'Signed Decimal: ' + str(signedDecResult)
+	octResultStr = 'Octal: ' + octResult[2:]
+	hexResultStr = 'Hexadecimal: ' + hexResult
+
+	items.append({
+		'title': decResultStr,
+		'subtitle': 'Copy to clipboard',
+		'valid': True,
+		'icon': {
+			'path': './images/decimal.png'
+		},
+		'arg': decResult
+	})
+
+	if type(signedDecResult) == int:
+		items.append({
+			'title': signedDecResultStr,
+			'subtitle': 'Copy to clipboard',
+			'valid': True,
+			'icon': {
+				'path': './images/plus-minus.png'
+			},
+			'arg': signedDecResult
+		})
+
+	items.append({
+		'title': hexResultStr,
+		'subtitle': 'Copy to clipboard',
+		'valid': True,
+		'icon': {
+			'path': './images/hex.png'
+		},
+		'arg': hexResult
+	})
+
+	items.append({
+		'title': octResultStr,
+		'subtitle': 'Copy to clipboard',
+		'valid': True,
+		'icon': {
+			'path': './images/8.png'
+		},
+		'arg': octResult
+	})
+
+except:
+	items_dict['items'] = [{
+		'title': 'Invalid binary number',
+		'valid': False,
+		'icon': {
+			'path': './images/invalid_conversion.png'
+		}
+	}]
+
+items_json = json.dumps(items_dict)
+
+print(items_json)</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>Convert from binary</string>
+				<key>type</key>
+				<integer>9</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>DD111221-2E1E-4A44-81B9-00EE7CCBE1C3</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>68</integer>
+				<key>keyword</key>
+				<string>oct</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>import sys
+import json
+
+items_dict = {
+	'items': []
+}
+
+items = items_dict['items']
+
+inputValue = sys.argv[1]
+if '0o' not in inputValue:
+	inputValue = '0o' + inputValue
+
+try:
+	decResult = int(inputValue, base=8)
+	try:
+		signedDecResult = int.from_bytes(decResult.to_bytes(length=1, byteorder='little'), signed=True, byteorder='little')
+	except OverflowError:
+		signedDecResult = 'Value too large to convert to signed integer'
+	binResult = bin(decResult)
+	hexResult = f'0x{decResult:X}'
+
+	decResultStr = 'Decimal: ' + str(decResult)
+	signedDecResultStr = 'Signed Decimal: ' + str(signedDecResult)
+	binResultStr = 'Binary: ' + binResult[2:]
+	hexResultStr = 'Hexadecimal: ' + hexResult
+
+	items.append({
+		'title': decResultStr,
+		'subtitle': 'Copy to clipboard',
+		'valid': True,
+		'icon': {
+			'path': './images/decimal.png'
+		},
+		'arg': decResult
+	})
+
+	if type(signedDecResult) == int:
+		items.append({
+			'title': signedDecResultStr,
+			'subtitle': 'Copy to clipboard',
+			'valid': True,
+			'icon': {
+				'path': './images/plus-minus.png'
+			},
+			'arg': signedDecResult
+		})
+
+	items.append({
+		'title': hexResultStr,
+		'subtitle': 'Copy to clipboard',
+		'valid': True,
+		'icon': {
+			'path': './images/hex.png'
+		},
+		'arg': hexResult
+	})
+
+	items.append({
+		'title': binResultStr,
+		'subtitle': 'Copy to clipboard',
+		'valid': True,
+		'icon': {
+			'path': './images/binary.png'
+		},
+		'arg': binResult
+	})
+
+except:
+	items_dict['items'] = [{
+		'title': 'Invalid octal number',
+		'valid': False,
+		'icon': {
+			'path': './images/invalid_conversion.png'
+		}
+	}]
+
+items_json = json.dumps(items_dict)
+
+print(items_json)</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>Convert from octal</string>
+				<key>type</key>
+				<integer>9</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>45E5A95C-3F6A-4C04-B3A0-BF866476F8E7</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string></string>
+	<key>uidata</key>
+	<dict>
+		<key>45E5A95C-3F6A-4C04-B3A0-BF866476F8E7</key>
+		<dict>
+			<key>xpos</key>
+			<real>40</real>
+			<key>ypos</key>
+			<real>510</real>
+		</dict>
+		<key>67CA1F17-0126-4A53-AD36-57D064D53876</key>
+		<dict>
+			<key>xpos</key>
+			<real>35</real>
+			<key>ypos</key>
+			<real>95</real>
+		</dict>
+		<key>6ED6DFF5-8D61-4BCC-B9F6-7EF7B4F875DE</key>
+		<dict>
+			<key>xpos</key>
+			<real>360</real>
+			<key>ypos</key>
+			<real>265</real>
+		</dict>
+		<key>8AAC8255-3D38-4A2B-A191-56A1A7CB8600</key>
+		<dict>
+			<key>xpos</key>
+			<real>35</real>
+			<key>ypos</key>
+			<real>240</real>
+		</dict>
+		<key>DD111221-2E1E-4A44-81B9-00EE7CCBE1C3</key>
+		<dict>
+			<key>xpos</key>
+			<real>35</real>
+			<key>ypos</key>
+			<real>375</real>
+		</dict>
+	</dict>
+	<key>userconfigurationconfig</key>
+	<array/>
+	<key>webaddress</key>
+	<string></string>
+</dict>
+</plist>
