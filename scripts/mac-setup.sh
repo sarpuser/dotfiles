@@ -62,20 +62,20 @@ installApps() {
 
 	# Install Homebrew apps
 	echo "Installing Homebrew apps..."
-	brew install --force $brewApps # --force replaces self downloaded apps
+	/opt/homebrew/bin/brew install --force $brewApps # --force replaces self downloaded apps
 
 	# Install App Store Apps
 	echo "Installing App Store Apps..."
-	mas install 1502839586 # Hand Mirror
-	mas install 1176895641 # Spark Mail
-	mas install 904280696 # Things 3
+	/opt/homebrew/bin/mas install 1502839586 # Hand Mirror
+	/opt/homebrew/bin/mas install 1176895641 # Spark Mail
+	/opt/homebrew/bin/mas install 904280696 # Things 3
 
 	echo Installed brew apps:
-	brew list
+	/opt/homebrew/bin/brew list
 
 	echo ""
 	echo "Installed App Store Apps:"
-	mas list | while read -r app; do
+	/opt/homebrew/bin/mas list | while read -r app; do
 		echo "    - $app"
 	done
 	echo ""
