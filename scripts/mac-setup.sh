@@ -100,10 +100,10 @@ setUpTerminal() {
 		git clone https://github.com/sarpuser/dotfiles.git "${HOME}/dotfiles"
 	fi
 
-	if ! command -v stow > /dev/null 2>&1; then
+	if ! command -v /opt/homebrew/bin/stow > /dev/null 2>&1; then
 		echo "Stow not installed. Skipping..."
 	else
-		stow -Rd "${HOME}/dotfiles" . && echo Configuration files cloned and stowed
+		/opt/homebrew/bin/stow -Rd "${HOME}/dotfiles" . && echo Configuration files cloned and stowed
 	fi
 
 	echo Setting up git...
