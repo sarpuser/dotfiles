@@ -21,7 +21,7 @@ stow -d ~/dotfiles .
 This script will install Homebrew (if not already installed), install brew & App Store apps, set up terminal environment by cloning this repository, and change settings. The Homebrew apps include desktop apps and if these are found on the Applications directory (installed from a website perhaps), the script will replace the executables with the Homebrew version without app data loss. Each of the script components (Homebrew & apps, terminal, and settings) are opt-in and safe to run multiple times.
 
 ```bash
-curl -fsS https://raw.githubusercontent.com/sarpuser/dotfiles/main/scripts/mac-setup.sh | /bin/bash
+bash <(curl -fsS https://raw.githubusercontent.com/sarpuser/dotfiles/main/scripts/mac-setup.sh)
 ```
 
 <details>

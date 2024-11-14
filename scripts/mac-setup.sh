@@ -51,7 +51,7 @@ installApps() {
 		eval "$(/opt/homebrew/bin/brew shellenv)"
 	fi
 
-	brewApps="1password 1password-cli alacritty aldente alfred arc appcleaner balenaetcher bartender bettedisplay defaultbrowser eza font-hack-nerd-font fping fzf gh git git-delta keyboardcleantool logi-options+ mas mission-control-plus neofetch oh-my-posh picocom pyenv raspberry-pi-imager rust rustup shellcheck speedtest spotify stow visual-studio-code utm wireguard-go zoxide"
+	brewApps="1password 1password-cli alacritty aldente alfred arc appcleaner balenaetcher bartender betterdisplay defaultbrowser eza font-hack-nerd-font fping fzf gh git git-delta keyboardcleantool logi-options+ mas mission-control-plus neofetch oh-my-posh picocom pyenv raspberry-pi-imager rust rustup shellcheck speedtest spotify stow visual-studio-code utm wireguard-go zoxide"
 
 	# Problematic for work
 	confirm "Do you want to install Discord?" && brewApps=$brewApps" discord" || echo skipping Discord...
@@ -60,12 +60,9 @@ installApps() {
 	confirm "Do you want to install Prism Launcher?" && brewApps=$brewApps" prismlauncher" || echo skipping Prism Launcher...
 	confirm "Do you want to install Steam?" && brewApps=$brewApps" steam" || echo skipping Steam...
 
-	# Sort apps
-	brewApps=$(echo "$brewApps" | xargs -n1 | sort -d | xargs)
-
 	# Install Homebrew apps
 	echo "Installing Homebrew apps..."
-	brew install --force "$brewApps" # --force replaces self downloaded apps
+	brew install --force $brewApps # --force replaces self downloaded apps
 
 	# Install App Store Apps
 	echo "Installing App Store Apps..."
@@ -73,18 +70,8 @@ installApps() {
 	mas install 1176895641 # Spark Mail
 	mas install 904280696 # Things 3
 
-	echo ""
-	echo "Installed brew apps:"
-	for package in $brewApps; do
-		packageInfo=$(brew info "$package")
-		if echo "$packageInfo" | grep -q "bottled"; then
-			packageDesc="$(echo "$packageInfo" | awk 'NR==2 {print}')"
-		else
-			packageDesc="$(echo "$packageInfo" | grep -A1 "Description" | tail -n1)"
-		fi
-
-		echo "    - $package: $packageDesc"
-	done
+	echo Installed brew apps:
+	brew list
 
 	echo ""
 	echo "Installed App Store Apps:"
