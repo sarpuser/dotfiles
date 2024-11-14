@@ -63,6 +63,8 @@ installApps() {
 
 	# Install Homebrew apps
 	echo "Installing Homebrew apps..."
+	/opt/homebrew/bin/brew tap teamookla/speedtest
+ 	/opt/homebrew/bin/brew update
 	/opt/homebrew/bin/brew install --force $brewFormulae # --force replaces self downloaded apps
 	/opt/homebrew/bin/brew install --cask $brewCasks # --force replaces self downloaded apps
 
