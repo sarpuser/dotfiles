@@ -48,8 +48,9 @@ installApps() {
 		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 		# Add Homebrew apps to PATH
 		echo Adding Homebrew apps to PATH...
-		eval "$(/opt/homebrew/bin/brew shellenv)"
 	fi
+
+	eval "$(/opt/homebrew/bin/brew shellenv)"
 
 	brewFormulae="defaultbrowser eza fping fzf gh git git-delta mas neofetch picocom pyenv rustup shellcheck speedtest stow wireguard-go zoxide"
 	brewCasks="1password 1password-cli alacritty aldente alfred arc appcleaner balenaetcher bartender betterdisplay font-hack-nerd-font keyboardcleantool logi-options+ mission-control-plus raspberry-pi-imager spotify visual-studio-code utm"
@@ -63,23 +64,23 @@ installApps() {
 
 	# Install Homebrew apps
 	echo "Installing Homebrew apps..."
-	/opt/homebrew/bin/brew tap teamookla/speedtest
- 	/opt/homebrew/bin/brew update
-	/opt/homebrew/bin/brew install --force $brewFormulae # --force replaces self downloaded apps
-	/opt/homebrew/bin/brew install --cask $brewCasks # --force replaces self downloaded apps
+	brew tap teamookla/speedtest
+	brew update
+	brew install $brewFormulae # --force replaces self downloaded apps
+	brew install --cask $brewCasks
 
 	# Install App Store Apps
 	echo "Installing App Store Apps..."
-	/opt/homebrew/bin/mas install 1502839586 # Hand Mirror
-	/opt/homebrew/bin/mas install 1176895641 # Spark Mail
-	/opt/homebrew/bin/mas install 904280696 # Things 3
+	mas install 1502839586 # Hand Mirror
+	mas install 1176895641 # Spark Mail
+	mas install 904280696 # Things 3
 
 	echo Installed brew apps:
-	/opt/homebrew/bin/brew list
+	brew list
 
 	echo ""
 	echo "Installed App Store Apps:"
-	/opt/homebrew/bin/mas list | while read -r app; do
+	mas list | while read -r app; do
 		echo "    - $app"
 	done
 	echo ""
@@ -88,11 +89,7 @@ installApps() {
 
 # Remove junk apps
 removeDefaultUnusedApps() {
-	[[ -d /System/Applications/Tips.app ]] && rm -rf /System/Applications/Tips.app && echo Removed Tips
-	[[ -d /System/Applications/Chess.app ]] && rm -rf /System/Applications/Chess.app && echo Removed Chess
-	[[ -d /Applications/GarageBand.app ]] && rm -rf /Applications/GarageBand.app && echo Removed GarageBand
-	[[ -d /System/Applications/News.app ]] && rm -rf /System/Applications/News.app && echo Removed News
-	[[ -d /System/Applications/Stocks.app ]] && rm -rf /System/Applications/Stocks.app && echo Removed Stocks
+	sudo mas uninstall 682658836 && echo Uninstalled GarageBand # GarageBand
 }
 
 # Set up terminal environment
@@ -104,14 +101,14 @@ setUpTerminal() {
 		git clone https://github.com/sarpuser/dotfiles.git "${HOME}/dotfiles"
 	fi
 
-	if ! command -v /opt/homebrew/bin/stow > /dev/null 2>&1; then
+	if ! command -v stow > /dev/null 2>&1; then
 		echo "Stow not installed. Skipping..."
 	else
 		# A placeholder file is needed in ~/.config before stowing so stow has to symlink individual directories.
 		# This is so that if an app creates configs in ~/.config, it does not show up in the dotfiles directory.
 		[[ ! -d "$HOME/.config" ]] && mkdir -p "$HOME/.config"
 		touch "$HOME/.config/.stowblockdirectsymlink"
-		/opt/homebrew/bin/stow -Rd "${HOME}/dotfiles" . && echo Configuration files cloned and stowed
+		stow -Rd "${HOME}/dotfiles" . && echo Configuration files cloned and stowed
 	fi
 
 	echo Setting up git...
@@ -123,22 +120,27 @@ setUpTerminal() {
 	read -r -p "Set email for git? ($(git config --global user.email)) " gitemail
 	[[ -n "$gitemail" ]] && git config --global user.email "$gitemail"
 
-	confirm "Do you want to authenticate with GitHub" && gh auth login
+	if ! gh auth status > /dev/null 2>&1; then
+		confirm "Do you want to authenticate with GitHub" && gh auth login
+	fi
 
 	[[ ! -d "$HOME/development" ]] && confirm "Do you want to create a ~/development directory?" && mkdir -p "$HOME/development" && echo Created ~/development directory
 
-	if [[ -d "$HOME/development" ]] &&  which fzf > /dev/null && which gh > /dev/null; then
-		confirm "Do you want to clone git repositories into ~/development?" && {
-			gh repo list | fzf -m | while read -r repoInfo; do
-				repo=$(echo "$repoInfo" | head -n1 | awk '{print $1;}')
-				repoName="$(echo "$repo" | cut -d/ -f2)"
-				git clone "https://github.com/$repo" "$HOME/development/$repoName"
-			done
-		}
-	fi
+	[[ -d "$HOME/development" ]] && confirm "Would you like to clone repositories to the ~/development directory?" && cloneReposIntoDevelopmentDir
 
 	[[ ! -d "$HOME/sandbox" ]] && confirm "Do you want to create the ~/sandbox directory?" && mkdir -p "$HOME/sandbox" && echo Create ~/sandbox directory
+}
 
+cloneReposIntoDevelopmentDir() {
+	if [[ -d "$HOME/development" ]] && which fzf > /dev/null && gh auth status > /dev/null 2>&1; then
+		gh repo list | fzf -m | while read -r repoInfo; do
+			repo=$(echo "$repoInfo" | head -n1 | awk '{print $1;}')
+			repoName="$(echo "$repo" | cut -d/ -f2)"
+			git clone "https://github.com/$repo" "$HOME/development/$repoName"
+		done
+	else
+		echo "There was a problem with cloning into ~/development - dir: $([[ -d "$HOME/development" ]] && echo true || echo false), fzf: $(which fzf), gh auth: $(gh auth status)"
+	fi
 }
 
 setDefaultBrowser() {
@@ -177,11 +179,14 @@ echo "
 This is a script to set up a brand new mac. It installs apps, downloads dotfile configs, and sets preferences. If apps have been installed from a website, this script will reinstall them through brew without any loss in data.
 "
 
+[[ -z "$(which brew)" && -f /opt/homebrew/bin/brew ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
+
 while true; do
 	echo "Options: "
 	echo "   x: Install XCode Command Line Tools & Rosetta 2"
 	echo "   h: Install Homebrew and App Store apps"
 	echo "   d: Setup dotfiles, terminal environment, & git"
+	echo "   r: Clone repositories into ~/development"
 	echo "   u: Remove default unused apps"
 	echo "   b: Set default browser to Arc"
 	echo "   p: Set system preferences"
@@ -197,6 +202,9 @@ while true; do
 			;;
 		[dD])
 			setUpTerminal
+			;;
+		[rR])
+			cloneReposIntoDevelopmentDir
 			;;
 		[pP])
 			changeSystemPreferences
