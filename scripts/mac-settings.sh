@@ -8,12 +8,14 @@
 # TODO: Screensaver start time & Settings
 # TODO: Change Function key to emojis
 # TODO: Disable setting "Rearrange spaces automatically"
+# TODO: Enable dictation
 
 # Close any open System Preferences panes, to prevent them from overriding
 # settings we’re about to change
 osascript -e 'tell application "System Settings" to quit'
 
 # Ask for the administrator password upfront
+echo This script requires sudo priveleges
 sudo -v
 
 # Keep-alive: update existing `sudo` time stamp until `mac-settings` has finished
@@ -27,6 +29,19 @@ done 2>/dev/null &
 # Functions                                                                   #
 ###############################################################################
 
+confirm() {
+    # call with a prompt string or use a default
+    read -r -p "${1:-Are you sure?} [y/N] " response
+    case "$response" in
+        [yY][eE][sS]|[yY])
+            true
+            ;;
+        *)
+            false
+            ;;
+    esac
+}
+
 setComputerName() {
     read -r -p "Enter computer name ($(scutil --get ComputerName))" response
     if [[ -n $response ]]; then
@@ -38,8 +53,8 @@ setComputerName() {
 }
 
 __dock_item() {
-    local tiletype="${1-file}"
-    local path="$2"
+    local path="$1"
+    local tiletype="${2-file}"
     printf "%s%s%s%s%s%s%s%s%s%s%s%s"\
         '<dict>'\
             '<key>tile-data</key> <dict>'\
@@ -110,7 +125,7 @@ setFinderSidebarItems() {
                 end if
 
                 -- Check Hard Drives
-                if not (value of checkbox 14 of scroll area 1 of window \"Finder Settings\" as boolean) then
+                if (value of checkbox 14 of scroll area 1 of window \"Finder Settings\" is not 1) then
                     click checkbox 14 of scroll area 1 of window \"Finder Settings\"
                 end if
 
@@ -145,11 +160,11 @@ setFinderSidebarItems() {
 setLoginWindowText() {
     confirm "Do you want to set a login message?" && {
         read -r -p "Enter login message: " message
-        defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText -string "$message"
+        sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText -string "$message" && echo "Login window message set to \"$message\""
     }
 }
 
-###############################################################################
+###############################################f################################
 # General UI/UX                                                               #
 ###############################################################################
 
@@ -170,16 +185,16 @@ defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 # Disable auto-correct
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
-# Change first day of the week to Monday
+# FIXME: Change first day of the week to Monday
 defaults write NSGlobalDomain AppleFirstWeekday -dict gregorian 2
 
-# Use Celcius
+# FIXME: Use Celcius
 defaults write NSGlobalDomain AppleTemperatureUnit -string "Celcius"
 
 # Add Turkish to preferred languages
 defaults write NSGlobalDomain AppleLanguages -array-add "tr-US"
 
-# 24 Hour Time
+# FIXME: 24 Hour Time
 defaults write NSGlobalDomain AppleICUForce24HourTime -int 1
 
 # Always show scrollbars
@@ -206,7 +221,7 @@ defaults write NSGlobaldomain AppleWindowTabbingMode -string "always"
 defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40
 
 # Control (^) + scroll to zoom
-defaults write com.apple.universalaccess closeViewScrollWheelToggle -int 1
+sudo defaults write com.apple.universalaccess closeViewScrollWheelToggle -bool true
 
 # Disable Game Center
 defaults write com.apple.gamed Disabled -bool true
@@ -292,11 +307,9 @@ defaults write com.apple.Dock persistent-apps -array-add "$(__dock_item /Applica
 defaults write com.apple.Dock persistent-apps -array-add "$(__dock_item /Applications/Things3.app)"
 
 # Add folders to Dock
-defaults write com.apple.Dock persistent-others -array-add "$(__dock_item directory "/Users/$USER/Downloads")"
-defaults write com.apple.Dock persistent-others -array-add "$(__dock_item directory /Applications)"
+defaults write com.apple.Dock persistent-others -array-add "$(__dock_item "/Users/$USER/Downloads" directory)"
+defaults write com.apple.Dock persistent-others -array-add "$(__dock_item /Applications directory)"
 
-# Stack items by kind in the Desktop
-/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:GroupBy Kind" ~/Library/Preferences/com.apple.finder.plist
 
 ###############################################################################
 # Finder                                                                      #
@@ -314,15 +327,12 @@ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
 
 # Show the ~/Library folder
-chflags nohidden ~/Library && xattr -d com.apple.FinderInfo ~/Library
-
-# Finder: show all filename extensions
-defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+chflags nohidden ~/Library
 
 # Finder: show path bar
 defaults write com.apple.finder ShowPathbar -bool true
 
-# Set Documents as the default location for new Finder windows
+# FIXME: Set Documents as the default location for new Finder windows
 # For other paths, use `PfLo` and `file:///full/path/here/`
 # defaults write com.apple.finder NewWindowTarget -string "PfDe"
 defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/"
@@ -330,7 +340,7 @@ defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/"
 # Disable remove from iCloud warning
 defaults write com.apple.Finder FXEnableRemoveFromICloudDriveWarning -int 0
 
-# Enable cloud Desktop & Documents
+# FIXME: Enable cloud Desktop & Documents
 defaults write com.apple.Finder FXICloudDriveDesktop -int 1
 defaults write com.apple.Finder FXICloudDriveDocuments -int 1
 
@@ -357,9 +367,9 @@ defaults write com.apple.finder "FXEnableExtensionChangeWarning" -bool "false"
 defaults write com.apple.finder QLEnableTextSelection -bool true
 
 # Expand all sections in info panel
-/usr/libexec/PlistBuddy -c "Set :FXInfoPanesExpanded:Privileges true" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Set :FXInfoPanesExpanded:MetaData true" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Set :FXInfoPanesExpanded:OpenWith true" ~/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c "Add :FXInfoPanesExpanded:Privileges bool true" ~/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c "Add :FXInfoPanesExpanded:MetaData bool true" ~/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c "Add :FXInfoPanesExpanded:OpenWith bool true" ~/Library/Preferences/com.apple.finder.plist
 
 # Set Finder Toolbar
 /usr/libexec/PlistBuddy -c 'Delete :"NSToolbar Configuration Browser":"TB Item Identifiers"' ~/Library/Preferences/com.apple.finder.plist
@@ -417,16 +427,16 @@ defaults write -globalDomain com.apple.trackpad.scaling -float 2
 # Set scroll direction to natural
 defaults write -g com.apple.swipescrolldirection -int 1
 
-# Enable tap to click
+# FIXME: Enable tap to click
 defaults write com.apple.AppleMultitouchTrackpad Clicking -int 1
 
-# Enable three finger drag
+# FIXME: Enable three finger drag (in accessibility settings)
 defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -int 1
 
-# Set horizontal space swipe to four fingers
+# FIXME: Set horizontal space swipe to four fingers
 defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerHorizSwipeGesture -int 0
 
-# Set mission control swipe to four fingers
+# FIXME: Set mission control swipe to four fingers
 defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerVertSwipeGesture -int 0
 
 ###############################################################################
@@ -437,12 +447,12 @@ defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerVertSwipeGes
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
 # Command + Option + l to lock screen
-defaults write -globalDomain NSUserKeyEquivalents  -dict-add "Lock Screen" "@~l"
+defaults write -globalDomain NSUserKeyEquivalents -dict-add "Lock Screen" "@~l"
 
-# Disable Spotlight keyboard shortcut
+# FIXME: Disable Spotlight keyboard shortcut
 /usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:64:enabled: false" ~/Library/Preferences/com.apple.symbolichotkeys.plist
 
-# Enable Dictation
+# FIXME: Enable Dictation
 defaults write com.apple.HIToolbox AppleDictationAutoEnable -int 1
 
 ###############################################################################

@@ -153,10 +153,10 @@ setDefaultBrowser() {
 }
 
 changeSystemPreferences() {
-	if [[ -f "$HOME/.config/scripts/mac-settings.sh" ]]; then
-		source "$HOME/.config/scripts/mac-settings.sh"
+	if [[ -f "$HOME/dotfiles/scripts/mac-settings.sh" ]]; then
+		bash "$HOME/dotfiles/scripts/mac-settings.sh"
 	else
-		source <(curl -s https://raw.githubusercontent.com/sarpuser/dotfiles/refs/heads/main/scripts/mac-settings.sh)
+		bash <(curl -s https://raw.githubusercontent.com/sarpuser/dotfiles/refs/heads/main/scripts/mac-settings.sh)
 	fi
 }
 
