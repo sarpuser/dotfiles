@@ -8,17 +8,16 @@ zstyle ':antidote:bundle' file "$HOME/.config/zsh/zsh-plugins.txt"
 antidote load
 ### End of Antidote installer
 
+# Add binary directories to path
+export PATH=/usr/local/sbin:$PATH
+export PATH=$PATH:~/.local/bin
+export PATH=$PATH:~/.cargo/bin
+
 # Add Homebrew apps to path
 if [[ -f "/opt/homebrew/bin/brew" ]]; then
   # If you're using macOS, you'll want this enabled
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
-
-# Add local binaries (OMP, Zoxide, etc. to PATH)
-export PATH=$PATH:~/.local/bin
-
-# Add Cargo binaries to PATH
-export PATH=$PATH:~/.cargo/bin
 
 # Activate Oh My Posh
 if [[ $(tty) =~ /dev/pts || -n $TERM_PROGRAM ]]; then

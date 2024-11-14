@@ -25,7 +25,7 @@ confirm() {
 # Install Dev Tools
 installDevTools() {
 	echo Installing XCode CLI...
-	if [[ -d /Library/Developer/CommandLineTools ]]; then
+	if [[ ! -d /Library/Developer/CommandLineTools ]]; then
 		xcode-select --install
 		confirm "Did you accept XCode EULA in the new window?"
 	else
@@ -51,7 +51,7 @@ installApps() {
 		eval "$(/opt/homebrew/bin/brew shellenv)"
 	fi
 
-	brewApps="1password 1password-cli alacritty aldente alfred arc appcleaner balenaetcher bartender bettedisplay eza font-hack-nerd-font fping fzf gh git git-delta keyboardcleantool logi-options+ mas mission-control-plus neofetch oh-my-posh picocom pyenv raspberry-pi-imager rust rustup shellcheck speedtest spotify stow visual-studio-code utm wireguard-go zoxide"
+	brewApps="1password 1password-cli alacritty aldente alfred arc appcleaner balenaetcher bartender bettedisplay defaultbrowser eza font-hack-nerd-font fping fzf gh git git-delta keyboardcleantool logi-options+ mas mission-control-plus neofetch oh-my-posh picocom pyenv raspberry-pi-imager rust rustup shellcheck speedtest spotify stow visual-studio-code utm wireguard-go zoxide"
 
 	# Problematic for work
 	confirm "Do you want to install Discord?" && brewApps=$brewApps" discord" || echo skipping Discord...
@@ -95,6 +95,15 @@ installApps() {
 }
 
 
+# Remove junk apps
+removeDefaultUnusedApps() {
+	[[ -d /System/Applications/Tips.app ]] && rm -rf /System/Applications/Tips.app && echo Removed Tips
+	[[ -d /System/Applications/Chess.app ]] && rm -rf /System/Applications/Chess.app && echo Removed Chess
+	[[ -d /Applications/GarageBand.app ]] && rm -rf /Applications/GarageBand.app && echo Removed GarageBand
+	[[ -d /System/Applications/News.app ]] && rm -rf /System/Applications/News.app && echo Removed News
+	[[ -d /System/Applications/Stocks.app ]] && rm -rf /System/Applications/Stocks.app && echo Removed Stocks
+}
+
 # Set up terminal environment
 setUpTerminal() {
 	if [[ -d "${HOME}/dotfiles" ]]; then
@@ -128,11 +137,39 @@ setUpTerminal() {
 	confirm "Do you want to authenticate with GitHub" && gh auth login
 
 	confirm "Do you want to change ownership of /usr/local to $USER:staff?" && sudo chown -R "$USER":staff /usr/local
+
+	confirm "Do you want to create a ~/development directory?" && {
+		mkdir -p "$HOME/development" && echo Created ~/development directory
+		if which fzf > /dev/null && which gh > /dev/null; then
+			confirm "Do you want to clone git repositories into ~/development?" && {
+				gh repo list | fzf -m | while read -r repo; do
+					echo $repo | head -n1 | awk '{print $1;}'
+					repoName="$(echo "$repo" | cut -d/ -f2)"
+					git clone "https://github.com/$repo" "$HOME/development/$repoName"
+				done
+			}
+		fi
+	}
+
+	confirm "Do you want to create the ~/sandbox directory?" && mkdir -p "$HOME/sandbox" && echo Create ~/sandbox directory
+
 }
 
-# TODO: Change System Preferences
+setDefaultBrowser() {
+	if [[ -f /opt/homebrew/bin/defaultbrowser && -d /Applications/Arc.app ]]; then
+		echo Setting default browser to Arc...
+		defaultbrowser browser
+	else
+		echo Could not set default browser to Arc. Either defaultbrowser or Arc is missing. Skipping...
+	fi
+}
+
 changeSystemPreferences() {
-	echo Not yet implemented
+	if [[ -f "$HOME/.config/scripts/mac-settings.sh" ]]; then
+		source "$HOME/.config/scripts/mac-settings.sh"
+	else
+		source <(curl -s https://raw.githubusercontent.com/sarpuser/dotfiles/refs/heads/main/scripts/mac-settings.sh)
+	fi
 }
 
 ############################################################################################
@@ -159,6 +196,8 @@ while true; do
 	echo "   x: Install XCode Command Line Tools & Rosetta 2"
 	echo "   h: Install Homebrew and App Store apps"
 	echo "   d: Setup dotfiles, terminal environment, & git"
+	echo "   u: Remove default unused apps"
+	echo "   b: Set default browser to Arc"
 	echo "   p: Set system preferences"
 	echo "   q: Quit"
 
@@ -175,6 +214,12 @@ while true; do
 			;;
 		[pP])
 			changeSystemPreferences
+			;;
+		[uU])
+			removeDefaultUnusedApps
+			;;
+		[bB])
+			setDefaultBrowser
 			;;
 		[qQ])
 			exit

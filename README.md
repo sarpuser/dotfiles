@@ -38,6 +38,7 @@ curl -fsS https://raw.githubusercontent.com/sarpuser/dotfiles/main/scripts/mac-s
   - [Bartender](https://www.macbartender.com/Bartender5/)
   - [Better Display](https://github.com/waydabber/BetterDisplay)
   - \[Optional\] [Discord](https://www.discord.com)
+  - [defaultbrowser](https://github.com/kerma/defaultbrowser)
   - [eza](https://github.com/eza-community/eza)
   - [Hack Nerd Font](https://www.nerdfonts.com/)
   - [Hand Mirror](https://handmirror.app/)
