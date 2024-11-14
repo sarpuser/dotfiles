@@ -41,7 +41,7 @@ installDevTools() {
 # Install Homebrew + apps
 installApps() {
 	# Install homebrew
-	if [[ -f "$(which brew)" ]]; then
+	if [[ -f "/opt/homebrew/bin/brew" ]]; then
 		echo Homebrew found at "$(which brew), skipping installation"
 	else
 		echo Installing Homebrew...
