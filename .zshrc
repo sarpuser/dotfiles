@@ -8,6 +8,9 @@ zstyle ':antidote:bundle' file "$HOME/.config/zsh/zsh-plugins.txt"
 antidote load
 ### End of Antidote installer
 
+### Oh My Posh Installer
+[[ ! -f "$HOME/.local/bin/oh-my-posh" ]] && curl -s https://ohmyposh.dev/install.sh | bash -s
+
 # Add binary directories to path
 export PATH=/usr/local/sbin:$PATH
 export PATH=$PATH:~/.local/bin

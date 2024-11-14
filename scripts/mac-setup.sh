@@ -51,7 +51,8 @@ installApps() {
 		eval "$(/opt/homebrew/bin/brew shellenv)"
 	fi
 
-	brewApps="1password 1password-cli alacritty aldente alfred arc appcleaner balenaetcher bartender betterdisplay defaultbrowser eza font-hack-nerd-font fping fzf gh git git-delta keyboardcleantool logi-options+ mas mission-control-plus neofetch oh-my-posh picocom pyenv raspberry-pi-imager rust rustup shellcheck speedtest spotify stow visual-studio-code utm wireguard-go zoxide"
+	brewFormulae="defaultbrowser eza fping fzf gh git git-delta mas neofetch picocom pyenv rustup shellcheck speedtest stow wireguard-go zoxide"
+	brewCasks="1password 1password-cli alacritty aldente alfred arc appcleaner balenaetcher bartender betterdisplay font-hack-nerd-font keyboardcleantool logi-options+ mission-control-plus raspberry-pi-imager spotify visual-studio-code utm"
 
 	# Problematic for work
 	confirm "Do you want to install Discord?" && brewApps=$brewApps" discord" || echo skipping Discord...
@@ -62,7 +63,8 @@ installApps() {
 
 	# Install Homebrew apps
 	echo "Installing Homebrew apps..."
-	/opt/homebrew/bin/brew install --force $brewApps # --force replaces self downloaded apps
+	/opt/homebrew/bin/brew install --force $brewFormulae # --force replaces self downloaded apps
+	/opt/homebrew/bin/brew install --cask $brewCasks # --force replaces self downloaded apps
 
 	# Install App Store Apps
 	echo "Installing App Store Apps..."
@@ -103,42 +105,37 @@ setUpTerminal() {
 	if ! command -v /opt/homebrew/bin/stow > /dev/null 2>&1; then
 		echo "Stow not installed. Skipping..."
 	else
+		# A placeholder file is needed in ~/.config before stowing so stow has to symlink individual directories.
+		# This is so that if an app creates configs in ~/.config, it does not show up in the dotfiles directory.
+		[[ ! -d "$HOME/.config" ]] && mkdir -p "$HOME/.config"
+		touch "$HOME/.config/.stowblockdirectsymlink"
 		/opt/homebrew/bin/stow -Rd "${HOME}/dotfiles" . && echo Configuration files cloned and stowed
 	fi
 
 	echo Setting up git...
 	git config --global include.path "$HOME/.config/git/public.gitconfig"
 
-	confirm "Set name for git? ($(git config --global user.name)) " && {
-		read -r -p "What name would you like to use for git? " gitname
-		git config --global user.name "$gitname"
-		echo "Set name in git to $(git config --global user.name)"
-	}
+	read -r -p "Set name for git? ($(git config --global user.name)) " gitname
+	[[ -n "$gitname" ]] && git config --global user.name "$gitname"
 
-	confirm "Set email for git? ($(git config --global user.email)) " && {
-		read -r -p "What email would you like to use for git? " gitemail
-		git config --global user.email "$gitemail"
-		echo "Set email in git to $(git config --global user.email)"
-	}
+	read -r -p "Set email for git? ($(git config --global user.email)) " gitemail
+	[[ -n "$gitemail" ]] && git config --global user.email "$gitemail"
 
 	confirm "Do you want to authenticate with GitHub" && gh auth login
 
-	confirm "Do you want to change ownership of /usr/local to $USER:staff?" && sudo chown -R "$USER":staff /usr/local
+	[[ ! -d "$HOME/development" ]] && confirm "Do you want to create a ~/development directory?" && mkdir -p "$HOME/development" && echo Created ~/development directory
 
-	confirm "Do you want to create a ~/development directory?" && {
-		mkdir -p "$HOME/development" && echo Created ~/development directory
-		if which fzf > /dev/null && which gh > /dev/null; then
-			confirm "Do you want to clone git repositories into ~/development?" && {
-				gh repo list | fzf -m | while read -r repo; do
-					echo $repo | head -n1 | awk '{print $1;}'
-					repoName="$(echo "$repo" | cut -d/ -f2)"
-					git clone "https://github.com/$repo" "$HOME/development/$repoName"
-				done
-			}
-		fi
-	}
+	if [[ -d "$HOME/development" ]] &&  which fzf > /dev/null && which gh > /dev/null; then
+		confirm "Do you want to clone git repositories into ~/development?" && {
+			gh repo list | fzf -m | while read -r repoInfo; do
+				repo=$(echo "$repoInfo" | head -n1 | awk '{print $1;}')
+				repoName="$(echo "$repo" | cut -d/ -f2)"
+				git clone "https://github.com/$repo" "$HOME/development/$repoName"
+			done
+		}
+	fi
 
-	confirm "Do you want to create the ~/sandbox directory?" && mkdir -p "$HOME/sandbox" && echo Create ~/sandbox directory
+	[[ ! -d "$HOME/sandbox" ]] && confirm "Do you want to create the ~/sandbox directory?" && mkdir -p "$HOME/sandbox" && echo Create ~/sandbox directory
 
 }
 
