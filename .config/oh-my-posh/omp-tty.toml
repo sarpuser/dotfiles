@@ -1,7 +1,15 @@
-#:schema https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
-
-version = 2
+version = 3
 final_space = true
+
+[secondary_prompt]
+  template = '<b>└->></b>'
+  foreground = 'magenta'
+  background = 'transparent'
+
+[transient_prompt]
+  template = '<b>> </b>'
+  background = 'transparent'
+  foreground_templates = ['{{if gt .Code 0}}red{{end}}', '{{if eq .Code 0}}magenta{{end}}']
 
 [[blocks]]
   type = 'prompt'
@@ -9,47 +17,56 @@ final_space = true
   newline = true
 
   [[blocks.segments]]
-    type = "shell"
-    style = "plain"
-    template = "{{ if gt .Name \"zsh\"}}{{ .Name }}{{ end }} "
-
-  [[blocks.segments]]
-    type = "session"
-    style = "plain"
-    foreground = "lightYellow"
-    background = "transparent"
-    template = "{{ .UserName }}@{{.HostName}} <7>in</>"
-
-  [[blocks.segments]]
-    type = 'path'
+    template = '{{ if gt .Name "zsh"}}{{ .Name }}{{ end }} '
+    type = 'shell'
     style = 'plain'
-    foreground = 'yellow'
-    background = 'transparent'
-    template = ' {{ .Path }}'
 
     [blocks.segments.properties]
-      style = 'full'
-      mapped_locations_enabled = false
+      cache_duration = 'none'
 
   [[blocks.segments]]
+    template = '{{ .UserName }}@{{.HostName}} <7>in</>'
+    foreground = 'lightYellow'
+    background = 'transparent'
+    type = 'session'
+    style = 'plain'
+
+    [blocks.segments.properties]
+      cache_duration = 'none'
+
+  [[blocks.segments]]
+    template = ' {{ .Path }}'
+    foreground = 'yellow'
+    background = 'transparent'
+    type = 'path'
+    style = 'plain'
+
+    [blocks.segments.properties]
+      cache_duration = 'none'
+      mapped_locations_enabled = false
+      style = 'full'
+
+  [[blocks.segments]]
+    template = ' {{ if .Error }}{{ .Error }}{{ else }}Python {{ .Full }}{{ if .Venv }} ({{ .Venv }}){{ else }}{{ end }}{{ end }}'
+    foreground = 'lightYellow'
     type = 'python'
     style = 'plain'
-    foreground = 'lightYellow'
-    template = ' {{ if .Error }}{{ .Error }}{{ else }}Python {{ .Full }}{{ if .Venv }} ({{ .Venv }}){{ else }}{{ end }}{{ end }}'
 
-      [blocks.segments.properties]
-        folder_name_fallback = false
-        display_mode = 'context'
+    [blocks.segments.properties]
+      cache_duration = 'none'
+      display_mode = 'context'
+      folder_name_fallback = false
 
   [[blocks.segments]]
-    type = 'git'
-    style = 'plain'
+    template = ' {{ .HEAD }}{{ if or (.Working.Changed) (.Staging.Changed) }}*{{ end }} {{ if gt .Behind 0 }}{{ .Behind }}«{{ end }}{{ if gt .Ahead 0 }}»{{ .Ahead }}{{ end }}'
     foreground = 'cyan'
     background = 'transparent'
-    template = ' {{ .HEAD }}{{ if or (.Working.Changed) (.Staging.Changed) }}*{{ end }} {{ if gt .Behind 0 }}{{ .Behind }}«{{ end }}{{ if gt .Ahead 0 }}»{{ .Ahead }}{{ end }}'
+    type = 'git'
+    style = 'plain'
 
     [blocks.segments.properties]
       branch_icon = ''
+      cache_duration = 'none'
       commit_icon = '@'
       fetch_status = true
 
@@ -58,13 +75,14 @@ final_space = true
   overflow = 'hidden'
 
   [[blocks.segments]]
-    type = 'executiontime'
-    style = 'plain'
+    template = '{{ .FormattedMs }}'
     foreground = 'lightYellow'
     background = 'transparent'
-    template = '{{ .FormattedMs }}'
+    type = 'executiontime'
+    style = 'plain'
 
     [blocks.segments.properties]
+      cache_duration = 'none'
       threshold = 5000
 
 [[blocks]]
@@ -73,26 +91,11 @@ final_space = true
   newline = true
 
   [[blocks.segments]]
+    template = '<b>└-></b>'
+    background = 'transparent'
     type = 'text'
     style = 'plain'
-    foreground_templates = [
-      "{{if gt .Code 0}}red{{end}}",
-      "{{if eq .Code 0}}magenta{{end}}",
-    ]
-    background = 'transparent'
-    template = "<b>└-></b>"
+    foreground_templates = ['{{if gt .Code 0}}red{{end}}', '{{if eq .Code 0}}magenta{{end}}']
 
-
-[transient_prompt]
-  foreground_templates = [
-    "{{if gt .Code 0}}red{{end}}",
-    "{{if eq .Code 0}}magenta{{end}}",
-  ]
-  background = 'transparent'
-  template = '<b>> </b>'
-
-[secondary_prompt]
-  foreground = 'magenta'
-  background = 'transparent'
-  template = '<b>└->></b>'
-
+    [blocks.segments.properties]
+      cache_duration = 'none'
