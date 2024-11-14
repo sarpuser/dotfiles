@@ -97,7 +97,7 @@ setUpTerminal() {
 		echo dotfiles directory found. Skipping cloning...
 	else
 		echo Cloning dotfiles repository...
-		git clone https://github.com/sarpuser/dotfiles.git "${HOME}"
+		git clone https://github.com/sarpuser/dotfiles.git "${HOME}/dotfiles"
 	fi
 
 	if ! command -v stow > /dev/null 2>&1; then
