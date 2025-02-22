@@ -12,9 +12,11 @@ antidote load
 [[ ! -f "$HOME/.local/bin/oh-my-posh" ]] && curl -s https://ohmyposh.dev/install.sh | bash -s
 
 # Add binary directories to path
-export PATH=/usr/local/sbin:$PATH
 export PATH=$PATH:~/.local/bin
-export PATH=$PATH:~/.cargo/bin
+
+# Set Cargo and Rust home directories
+export CARGO_HOME="/opt/cargo"
+export RUSTUP_HOME="/opt/rustup"
 
 # Add Homebrew apps to path
 if [[ -f "/opt/homebrew/bin/brew" ]]; then
