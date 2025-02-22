@@ -25,10 +25,12 @@ if [[ -f "/opt/homebrew/bin/brew" ]]; then
 fi
 
 # Activate Oh My Posh
-if [[ $(tty) =~ /dev/pts || -n $TERM_PROGRAM ]]; then
-  eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/omp-emulator.toml)"
-else
-  eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/omp-tty.toml)"
+if [ "$TERM_PROGRAM" != "Apple_Terminal" ]; then
+  if [[ $(tty) =~ /dev/pts || -n $TERM_PROGRAM ]]; then
+    eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/omp-emulator.toml)"
+  else
+    eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/omp-tty.toml)"
+  fi
 fi
 
 # Load plugin settings
