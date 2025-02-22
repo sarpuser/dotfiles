@@ -1,9 +1,12 @@
+[init]
+	defaultBranch = main
 [submodule]
 	recurse = true
 [push]
 	recurseSubmodules = on-demand
 [fetch]
 	recurseSubmodules = true
+	prune = true
 [status]
 	submoduleSummary = 1
 [credential "https://github.com"]
@@ -19,3 +22,7 @@
 [delta]
 	features = platypus
 	hyperlinks = true
+[alias]
+	tree = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all
+	co = !$HOME/dotfiles/.config/git/scripts/smart-checkout.sh
+	purge = !git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -d
