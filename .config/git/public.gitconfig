@@ -9,6 +9,8 @@
 	prune = true
 [status]
 	submoduleSummary = 1
+[add]
+	verbose = true
 [credential "https://github.com"]
 	helper =
 	helper = "!f() { if [ \"$(uname -s)\" = Linux ]; then /usr/bin/gh auth git-credential \"$@\"; else /opt/homebrew/bin/gh auth git-credential \"$@\"; fi; };f"
@@ -26,3 +28,4 @@
 	tree = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all
 	co = !$HOME/dotfiles/.config/git/scripts/smart-checkout.sh
 	purge = !git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -d
+	st = status
