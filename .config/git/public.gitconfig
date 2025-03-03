@@ -29,3 +29,4 @@
 	co = !$HOME/dotfiles/.config/git/scripts/smart-checkout.sh
 	purge = !git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -d
 	st = status
+	branch-summary = log --name-status --boundary dev..HEAD
