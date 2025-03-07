@@ -31,4 +31,4 @@
 	st = status
 	branch-summary = log --name-status --boundary origin/dev..HEAD
 	modified = log --name-status
-	sync = !git fetch origin dev:dev && git rebase origin/dev
+	sync = !git fetch origin dev:dev && git rebase origin/dev && git purge
