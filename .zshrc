@@ -89,6 +89,7 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 alias ls='eza -laa --color=always --icons=auto'
 alias aliases='nano $HOME/.config/zsh/aliases.zsh && source $HOME/.config/zsh/aliases.zsh'
 alias venv-new="python -m venv .venv"
+alias pip="echo pip is aliased to uv pip. Use pip3 for default pip. && uv pip"
 alias venv="source .venv/bin/activate"
 alias diff='delta'
 alias colortest='curl -sS https://raw.githubusercontent.com/pablopunk/colortest/master/colortest | bash'
