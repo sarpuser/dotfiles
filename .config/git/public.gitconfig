@@ -1,3 +1,6 @@
+[user]
+	name = Sarp User
+	email = 23362324+sarpuser@users.noreply.github.com
 [init]
 	defaultBranch = main
 [submodule]

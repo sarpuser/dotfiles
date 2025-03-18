@@ -8,6 +8,9 @@ zstyle ':antidote:bundle' file "$HOME/.config/zsh/zsh-plugins.txt"
 antidote load
 ### End of Antidote installer
 
+### Set git global config directory
+export GIT_CONFIG_GLOBAL=$HOME/.config/git/public.gitconfig
+
 ### Oh My Posh Installer
 [[ ! -f "$HOME/.local/bin/oh-my-posh" ]] && curl -s https://ohmyposh.dev/install.sh | bash -s
 
