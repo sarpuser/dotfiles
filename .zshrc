@@ -8,11 +8,21 @@ zstyle ':antidote:bundle' file "$HOME/.config/zsh/zsh-plugins.txt"
 antidote load
 ### End of Antidote installer
 
+# Check and install Alacritty terminfo if needed
+if [[ "$TERM_PROGRAM" == "alacritty" && ! $(infocmp alacritty &>/dev/null) ]]; then
+  mkdir -p ~/.terminfo
+  export TERMINFO_DIRS=$HOME/.terminfo:/usr/share/terminfo
+  if ! curl -sSL https://raw.githubusercontent.com/alacritty/alacritty/master/extra/alacritty.info | tic -xe alacritty,alacritty-direct -o ~/.terminfo - &>/dev/null; then
+    export TERM=xterm-256color
+  fi
+fi
+
 ### Set git global config directory
 export GIT_CONFIG_GLOBAL=$HOME/.config/git/public.gitconfig
 
-### Oh My Posh Installer
+### Tool Installer
 [[ ! -f "$HOME/.local/bin/oh-my-posh" ]] && curl -s https://ohmyposh.dev/install.sh | bash -s
+[[ ! -f "$HOME/.local/bin/zoxide" ]] && curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
 
 # Add binary directories to path
 export PATH=$PATH:~/.local/bin
@@ -47,15 +57,22 @@ source "$HOME/.config/zsh/zsh-tab-title.zsh"
 # Load completions
 autoload -Uz compinit && compinit
 
+# Basic ZSH options for better completion experience
+setopt AUTO_MENU
+setopt COMPLETE_IN_WORD
+setopt ALWAYS_TO_END
+setopt AUTO_PARAM_SLASH
+setopt NO_FLOW_CONTROL
+
 # FIXME: This deletes the whole line rather than before cursor
 # Keybindings
-function backward-kill-line() {
-  zle set-mark-command -w
-  zle beginning-of-line
-  zle kill-region -w
-}
+# function backward-kill-line() {
+#   zle set-mark-command -w
+#   zle beginning-of-line
+#   zle kill-region -w
+# }
 
-zle -N backward-kill-line
+# zle -N backward-kill-line
 
 # bindkey '^[[3;9?' backward-kill-line
 bindkey '^[[3;9~' backward-kill-line
@@ -63,6 +80,9 @@ bindkey '^[[1;3D' backward-word
 bindkey '^[[1;3C' forward-word
 bindkey '^[[1;9D' beginning-of-line
 bindkey '^[[1;9C' end-of-line
+
+# Key bindings for accepting autosuggestions
+bindkey '^[[C' autosuggest-accept  # Right arrow
 
 # History
 HISTSIZE=5000
@@ -77,12 +97,35 @@ setopt hist_save_no_dups
 setopt hist_ignore_dups
 setopt hist_find_no_dups
 
+# Real-time autosuggestions configuration
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+ZSH_AUTOSUGGEST_USE_ASYNC=1
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=8"
+
 # Completion styling
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+zstyle ':completion:*' menu select
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "$HOME/.zcompcache"
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*:descriptions' format '%F{yellow}%B--- %d%b%f'
+zstyle ':completion:*:warnings' format '%F{red}no matches found%f'
+
+# fzf-tab configuration
+zstyle ':fzf-tab:complete:*' fzf-flags --height=40% --layout=reverse --info=inline --border
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color=always $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color=always $realpath'
+
+# Disable preview in SSH sessions if needed
+if [[ -n $SSH_CONNECTION ]]; then
+  zstyle ':fzf-tab:*' fzf-preview ''
+  zstyle ':fzf-tab:*' fzf-flags --height=30% --layout=reverse
+fi
+
+# Enable menu selection
+zmodload -i zsh/complist
 
 # Aliases
 [[ -f $HOME/.config/zsh/aliases.zsh ]] && source "$HOME/.config/zsh/aliases.zsh"
@@ -91,6 +134,7 @@ alias aliases='nano $HOME/.config/zsh/aliases.zsh && source $HOME/.config/zsh/al
 alias venv-new="python -m venv .venv"
 alias pip="echo pip is aliased to uv pip. Use pip3 for default pip. && uv pip"
 alias venv="source .venv/bin/activate"
+alias py-ignore="curl -sSoL https://gist.githubusercontent.com/sarpuser/799069ce3c377f437645c5f6200f87dd/raw/.gitignore"
 alias diff='delta'
 alias colortest='curl -sS https://raw.githubusercontent.com/pablopunk/colortest/master/colortest | bash'
 
@@ -103,5 +147,4 @@ else
   source "/usr/share/doc/fzf/examples/completion.zsh"
 fi
 
-zsh-defer eval "$(pyenv init -)"
 eval "$(zoxide init --cmd cd zsh)"
