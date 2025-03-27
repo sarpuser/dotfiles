@@ -147,7 +147,7 @@ echo Changed dotfiles URL to SSH
 
 # Stow dotfiles - safely
 showMessage "Stowing dotfiles"
-stow -R dotfiles
+stow -R -d ${USER_HOME}/dotfiles .
 
 # Disable unwanted MOTD components but keep update notifications
 showMessage "Configuring MOTD settings"
