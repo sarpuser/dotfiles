@@ -30,15 +30,16 @@ bash <(curl -fsS https://raw.githubusercontent.com/sarpuser/dotfiles/main/script
   - [1Password](https://1password.com/)
   - [1Password CLI](https://developer.1password.com/docs/cli/get-started/) # needed for Alfred
   - [Alacritty](https://alacritty.org/index.html)
-  - [AlDente](https://apphousekitchen.com/)
   - [Alfred](https://www.alfredapp.com/)
   - [Arc Browser](https://arc.net/)
   - [App Cleaner](https://freemacsoft.net/appcleaner/)
   - [Balena Etcher](https://etcher.balena.io/)
   - [Bartender](https://www.macbartender.com/Bartender5/)
   - [Better Display](https://github.com/waydabber/BetterDisplay)
+  - \[Optional\] [Copilot](https://copilot.money/)
   - \[Optional\] [Discord](https://www.discord.com)
   - [defaultbrowser](https://github.com/kerma/defaultbrowser)
+  - [Dropzone 4](https://aptonic.com/)
   - [eza](https://github.com/eza-community/eza)
   - [Hack Nerd Font](https://www.nerdfonts.com/)
   - [Hand Mirror](https://handmirror.app/)
@@ -69,7 +70,41 @@ bash <(curl -fsS https://raw.githubusercontent.com/sarpuser/dotfiles/main/script
   - [Visual Studio Code](https://code.visualstudio.com/)
   - [UTM](https://mac.getutm.app/)
   - [Wireguard Go](https://github.com/WireGuard/wireguard-go)
+  - [Zoom](https://zoom.us/)
+  - xz
   - [zoxide](https://github.com/ajeetdsouza/zoxide)
+</details>
+
+#### Post-Script Setup
+  - Log into apps
+  - Create WireGuard conf
+    - Place `<confName>.conf` in `/etc/wireguard`
+    - Alias `vpn-on` to `wg-quick up <confName>`
+    - Alias `vpn-off` to `wg-quick down <confName>`
+  - Bartender configuration
+  - Add accounts
+
+### Debian/Ubuntu
+This script will install packages, set up dotfiles, install the Hack Nerd Font, set zsh as default, set the locale, and try to set the MOTD. The script ends with switching to zsh.
+
+```bash
+wget -qO- https://github.com/sarpuser/doftiles/main/scripts/debian-setup.sh | sudo bash
+```
+
+<details>
+<summary>Installed packages</summary>
+
+  - curl
+  - eza
+  - fontconfig
+  - fzf
+  - git
+  - python3
+  - python3-pip
+  - speedtest
+  - stow
+  - uv (installed in /opt/cargo and symlinked to /usr/local/bin)
+  - zsh
 </details>
 
 ## Reference
@@ -77,6 +112,9 @@ bash <(curl -fsS https://raw.githubusercontent.com/sarpuser/dotfiles/main/script
 Stow manages symlinks for all the files in the dotfiles repository. By default it creates symlinks for the selected "packages" (the dotfiles in this case) in the parent directory. For `~/dotfiles/.zshrc`, stow would create the symlink `~/.zshrc`. Likewise, for `~/dotfiles/.config/alacritty` it would create `~/.config/alacritty`.
 
 Any files/folders that stow should not create symlinks for can be placed in [`.stow-local-ignore`](/.stow-local-ignore)
+
+> [!NOTE]
+> Unless [`--no-folding`](#options) is used, `.stow-local-ignore` file can only ignore paths in the root of the package.
 
 #### Syntax
 ```bash
@@ -92,3 +130,4 @@ stow [options] package
   - Default: Parent of stow directory
 - `-R`: Restow (delete all symlinks and recreate them)
 - `-D`: Delete all symlinks
+- `--no-folding`: Only create symlinks for files, not directories
