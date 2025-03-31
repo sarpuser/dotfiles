@@ -25,12 +25,6 @@ showMessage() {
     echo "===================================="
 }
 
-# Function to check if a package is installed
-isPackageInstalled() {
-    dpkg -l "$1" | grep -q "^ii" > /dev/null 2>&1
-    return $?
-}
-
 # Get the username of the actual user (not root)
 ACTUAL_USER=$(logname || echo "${SUDO_USER:-${USER}}")
 USER_HOME=$(eval echo ~${ACTUAL_USER})
@@ -66,38 +60,32 @@ apt install -y $PACKAGES
 
 # Install eza (modern ls replacement)
 showMessage "Installing eza"
-if ! isPackageInstalled "eza"; then
-    # Check if repository is already configured
-    if [ ! -f /etc/apt/sources.list.d/eza.list ]; then
-        apt install -y gpg
-        mkdir -p /etc/apt/keyrings
-        wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | gpg --dearmor -o /etc/apt/keyrings/eza.gpg
-        echo "deb [signed-by=/etc/apt/keyrings/eza.gpg] http://deb.gierens.de stable main" | tee /etc/apt/sources.list.d/eza.list
-        chmod 644 /etc/apt/keyrings/eza.gpg
-        apt update
-    fi
+if ! command -v eza &> /dev/null; then
+    apt install -y gpg
+    mkdir -p /etc/apt/keyrings
+    wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
+    chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
+    apt update
     apt install -y eza
+else
+    echo eza already installed. Skipping...
 fi
 
-# Install uv (fast Python package installer)
 showMessage "Installing uv"
 if ! command -v uv &> /dev/null; then
-    curl -LsSf https://astral.sh/uv/install.sh | XDG_BIN_HOME=/usr/local/bin sh
+    curl -LsSf https://astral.sh/uv/install.sh | XDG_BIN_HOME=/usr/local/bin sudo -E sh
+    chmod root:root /usr/local/bin/uv*
+else
+    echo uv already installed. Skipping...
 fi
 
 # Install Speedtest CLI
 showMessage "Installing Speedtest CLI"
-if ! isPackageInstalled "speedtest"; then
-    apt install -y gnupg1 apt-transport-https dirmngr
-    # Check if repository is already configured
-    if [ ! -f /etc/apt/sources.list.d/ookla_speedtest-cli.list ]; then
-        # Download the script first instead of piping directly to bash
-        curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh > /tmp/speedtest-repo.sh
-        chmod +x /tmp/speedtest-repo.sh
-        /tmp/speedtest-repo.sh
-        rm /tmp/speedtest-repo.sh
-    fi
-    apt install -y speedtest
+if ! command -v speedtest &> /dev/null; then
+    curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh | sudo bash
+else
+    echo Speedtest already installed. Skipping...
 fi
 
 # Install Nerd Hack Font
