@@ -75,7 +75,7 @@ fi
 showMessage "Installing uv"
 if ! command -v uv &> /dev/null; then
     curl -LsSf https://astral.sh/uv/install.sh | XDG_BIN_HOME=/usr/local/bin sudo -E sh
-    chmod root:root /usr/local/bin/uv*
+    chown root:root /usr/local/bin/uv*
 else
     echo uv already installed. Skipping...
 fi
