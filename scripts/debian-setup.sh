@@ -123,7 +123,7 @@ echo Changed dotfiles URL to SSH
 
 # Stow dotfiles - safely
 showMessage "Stowing dotfiles"
-stow -R -d ${USER_HOME}/dotfiles .
+sudo -u ${ACTUAL_USER} stow -R -d ${USER_HOME}/dotfiles .
 
 # Disable unwanted MOTD components but keep update notifications
 showMessage "Configuring MOTD settings"
@@ -153,7 +153,4 @@ done
 showMessage "Setting zsh as default shell for ${ACTUAL_USER}"
 chsh -s "$(which zsh)" ${ACTUAL_USER}
 
-showMessage "Setup completed successfully!"
-# Switch to zsh shell to complete setup
-echo "Switching to zsh shell..."
-exec zsh
+showMessage "Setup completed. Run 'exec zsh' to switch to zsh."
