@@ -82,20 +82,7 @@ fi
 # Install uv (fast Python package installer)
 showMessage "Installing uv"
 if ! command -v uv &> /dev/null; then
-    # Create directories with proper permissions
-    mkdir -p /opt/cargo/bin /opt/rustup
-
-    # Option 1: Use the official installer with custom paths
-    curl -sSf https://astral.sh/uv/install.sh > /tmp/uv-install.sh
-    chmod +x /tmp/uv-install.sh
-    CARGO_HOME=/opt/cargo RUSTUP_HOME=/opt/rustup /tmp/uv-install.sh
-    rm /tmp/uv-install.sh
-
-    # Create symlink to make uv available in PATH
-    ln -sf /opt/cargo/bin/uv /usr/local/bin/uv
-
-    # Set permissions so all users can access
-    chmod -R 755 /opt/cargo /opt/rustup
+    curl -LsSf https://astral.sh/uv/install.sh | XDG_BIN_HOME=/usr/local/bin sh
 fi
 
 # Install Speedtest CLI
