@@ -88,7 +88,7 @@ bash <(curl -fsS https://raw.githubusercontent.com/sarpuser/dotfiles/main/script
 This script will install packages, set up dotfiles, install the Hack Nerd Font, set zsh as default, set the locale, and try to set the MOTD. The script ends with switching to zsh.
 
 ```bash
-wget -qO- https://raw.githubusercontent.com/sarpuser/dotfiles/main/scripts/debian-setup.sh | sudo bash
+wget -qO- https://raw.githubusercontent.com/sarpuser/dotfiles/refs/heads/main/scripts/debian-setup.sh | sudo bash
 ```
 
 <details>
