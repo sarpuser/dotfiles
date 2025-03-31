@@ -110,6 +110,7 @@ DOTFILES_DIR="${USER_HOME}/dotfiles"
 if [ ! -d "${DOTFILES_DIR}" ]; then
     # Make sure we run git commands as the actual user
 	git clone https://github.com/sarpuser/dotfiles.git ${DOTFILES_DIR}
+    chown -R ${ACTUAL_USER}:${ACTUAL_USER} ${DOTFILES_DIR}
     echo "Dotfiles repository cloned"
 else
 
