@@ -6,7 +6,7 @@ LOCATION=New_York
 TIMEZONE="America/$LOCATION"
 LOCALE="US/$LOCATION"
 
-PACKAGES="git curl stow fontconfig python3 python3-pip fzf zsh"
+PACKAGES="git curl stow fontconfig python3 python3-pip fzf unzip zsh"
 
 # Check if script is run with sudo
 if [ "$(id -u)" -ne 0 ]; then
@@ -96,7 +96,7 @@ FONT_SAMPLE="${FONT_DIR}/Hack Regular Nerd Font Complete.ttf"
 if [ ! -f "${FONT_SAMPLE}" ]; then
     mkdir -p ${FONT_DIR}
     cd /tmp
-    curl -LO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip
+    curl -sLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip
     unzip -o Hack.zip -d ${FONT_DIR}
     chmod 644 ${FONT_DIR}/*.ttf
     fc-cache -fv
