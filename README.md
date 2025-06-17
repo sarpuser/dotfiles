@@ -5,6 +5,7 @@ This repository includes configuration files for various programs, as well as se
 ```bash
 git clone https://www.github.com/sarpuser/dotfiles ~/dotfiles
 stow -d ~/dotfiles .
+chmod +x -R $HOME/dotfiles/.config/git/scripts/ # Needed to use git scripts
 ```
 
 #### Requirements
@@ -108,6 +109,11 @@ wget -qO- https://raw.githubusercontent.com/sarpuser/dotfiles/refs/heads/main/sc
 </details>
 
 ## Reference
+
+### Git
+
+Refer to the [git config README](.config/git/README.md)
+
 ### [GNU Stow](https://www.gnu.org/software/stow/manual/stow.html)
 Stow manages symlinks for all the files in the dotfiles repository. By default it creates symlinks for the selected "packages" (the dotfiles in this case) in the parent directory. For `~/dotfiles/.zshrc`, stow would create the symlink `~/.zshrc`. Likewise, for `~/dotfiles/.config/alacritty` it would create `~/.config/alacritty`.
 
