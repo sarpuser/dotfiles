@@ -36,3 +36,4 @@
 	branch-summary = log --name-status --boundary origin/dev..HEAD
 	modified = log --name-status
 	sync = !git fetch origin dev:dev && git rebase origin/dev && git purge
+	module = !$HOME/dotfiles/.config/git/scripts/subtree-modules.sh
