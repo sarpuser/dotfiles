@@ -22,7 +22,6 @@
 	helper = "!f() { if [ \"$(uname -s)\" = Linux ]; then /usr/bin/gh auth git-credential \"$@\"; else /opt/homebrew/bin/gh auth git-credential \"$@\"; fi; };f"
 [core]
 	pager = delta
-	excludesFile = /Users/c72700/.config/git/gitignore
 [include]
 	path = ~/.config/git/delta-diff-themes.gitconfig
 [delta]
