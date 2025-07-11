@@ -1,6 +1,8 @@
 [user]
 	name = Sarp User
 	email = 23362324+sarpuser@users.noreply.github.com
+[includeIf "hasconfig:remote.*.url:**/*bitbucket*/**"]
+	path = ~/work.gitconfig
 [init]
 	defaultBranch = main
 [submodule]
