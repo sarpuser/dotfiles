@@ -131,6 +131,7 @@ zmodload -i zsh/complist
 [[ -f $HOME/.config/zsh/aliases.zsh ]] && source "$HOME/.config/zsh/aliases.zsh"
 alias ls='eza -laa --color=always --icons=auto'
 alias aliases='nano $HOME/.config/zsh/aliases.zsh && source $HOME/.config/zsh/aliases.zsh'
+alias gitignore='cp $HOME/.config/git/gitignore gitignore'
 alias venv-new="python -m venv .venv"
 alias pip="echo pip is aliased to uv pip. Use pip3 for default pip. && uv pip"
 alias venv="source .venv/bin/activate"
