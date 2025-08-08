@@ -48,19 +48,20 @@ installApps() {
 		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 		# Add Homebrew apps to PATH
 		echo Adding Homebrew apps to PATH...
+		eval "$(/opt/homebrew/bin/brew shellenv)"
 	fi
 
-	eval "$(/opt/homebrew/bin/brew shellenv)"
 
-	brewFormulae="defaultbrowser eza fping fzf gh git git-delta mas neofetch picocom pyenv rustup shellcheck speedtest stow wireguard-go zoxide"
-	brewCasks="1password 1password-cli alacritty aldente alfred arc appcleaner balenaetcher bartender betterdisplay font-hack-nerd-font keyboardcleantool logi-options+ mission-control-plus raspberry-pi-imager spotify visual-studio-code utm"
+	brewFormulae="defaultbrowser eza fping fzf gh git git-delta mas neofetch picocom pyenv rustup shellcheck speedtest stow wireguard-tools xz zoxide"
+	brewCasks="1password 1password-cli alacritty alfred arc appcleaner balenaetcher bartender betterdisplay dropzone font-hack-nerd-font keyboardcleantool logi-options+ mission-control-plus raspberry-pi-imager spotify visual-studio-code utm zoom"
 
 	# Problematic for work
-	confirm "Do you want to install Discord?" && brewApps=$brewApps" discord" || echo skipping Discord...
-	confirm "Do you want to install KeepingYouAwake?" && brewApps=$brewApps" keepingyouawake" || echo skipping KeepingYouAwake...
-	confirm "Do you want to install PIA VPN?" && brewApps=$brewApps" private-internet-access" || echo skipping PIA VPN...
-	confirm "Do you want to install Prism Launcher?" && brewApps=$brewApps" prismlauncher" || echo skipping Prism Launcher...
-	confirm "Do you want to install Steam?" && brewApps=$brewApps" steam" || echo skipping Steam...
+	confirm "Do you want to install Discord?" && brewCasks=$brewCasks" discord" || echo skipping Discord...
+	confirm "Do you want to install KeepingYouAwake?" && brewCasks=$brewCasks" keepingyouawake" || echo skipping KeepingYouAwake...
+	confirm "Do you want to install PIA VPN?" && brewCasks=$brewCasks" private-internet-access" || echo skipping PIA VPN...
+	confirm "Do you want to install Prism Launcher?" && brewCasks=$brewCasks" prismlauncher" || echo skipping Prism Launcher...
+	confirm "Do you want to install Steam?" && brewCasks=$brewCasks" steam" || echo skipping Steam...
+	confirm "Do you want to install Copilot Money?" && brewCasks=$brewCasks" copilot" || echo Skipping Copilot...
 
 	# Install Homebrew apps
 	echo "Installing Homebrew apps..."
@@ -124,11 +125,17 @@ setUpTerminal() {
 		confirm "Do you want to authenticate with GitHub" && gh auth login
 	fi
 
+	confirm "Change ownership of /opt to $USER:staff?" && sudo chown -R "$USER":staff /opt
+
+	[[ ! -d /opt/rustup ]] && confirm "Do you want to install Rust?" && RUSTUP_HOME="/opt/rustup" CARGO_HOME="/opt/cargo" bash -c 'curl https://sh.rustup.rs -sSf | sh -s -- -y'
+
+	confirm "Do you want to install the latest Python 3 version? ($(pyenv latest 3))" && pyenv install 3 && pyenv global "$(pyenv latest 3)" && echo "Default python set to $(pyenv global)"
+
 	[[ ! -d "$HOME/development" ]] && confirm "Do you want to create a ~/development directory?" && mkdir -p "$HOME/development" && echo Created ~/development directory
 
 	[[ -d "$HOME/development" ]] && confirm "Would you like to clone repositories to the ~/development directory?" && cloneReposIntoDevelopmentDir
 
-	[[ ! -d "$HOME/sandbox" ]] && confirm "Do you want to create the ~/sandbox directory?" && mkdir -p "$HOME/sandbox" && echo Create ~/sandbox directory
+	[[ ! -d "$HOME/sandbox" ]] && confirm "Do you want to create the ~/sandbox directory?" && mkdir -p "$HOME/sandbox" && echo Created ~/sandbox directory
 }
 
 cloneReposIntoDevelopmentDir() {
