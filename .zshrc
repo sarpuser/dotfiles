@@ -20,10 +20,6 @@ fi
 ### Set git global config directory
 export GIT_CONFIG_GLOBAL=$HOME/.config/git/public.gitconfig
 
-### Tool Installer
-[[ ! -f "$HOME/.local/bin/oh-my-posh" ]] && curl -s https://ohmyposh.dev/install.sh | bash -s
-[[ ! -f "$HOME/.local/bin/zoxide" ]] && curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
-
 # Add binary directories to path
 export PATH=$PATH:~/.local/bin
 
@@ -31,10 +27,19 @@ export PATH=$PATH:~/.local/bin
 export CARGO_HOME="/opt/cargo"
 export RUSTUP_HOME="/opt/rustup"
 
+### Tool Installer
+[[ ! -f "$HOME/.local/bin/oh-my-posh" ]] && curl -s https://ohmyposh.dev/install.sh | bash -s
+[[ ! -f "$HOME/.local/bin/zoxide" ]] && curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+
 # Add Homebrew apps to path
 if [[ -f "/opt/homebrew/bin/brew" ]]; then
   # If you're using macOS, you'll want this enabled
   eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+# Log out after 20 mins of inactivity
+if [[ "$(uname)" == Linux ]]; then
+  export TMOUT=1200
 fi
 
 # Activate Oh My Posh
