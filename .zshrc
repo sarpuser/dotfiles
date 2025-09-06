@@ -27,9 +27,6 @@ export PATH=$PATH:~/.local/bin
 export CARGO_HOME="/opt/cargo"
 export RUSTUP_HOME="/opt/rustup"
 
-# Source system dependent env vars
-[[ -f "$HOME/.shellenv" ]] && source "$HOME/.shellenv"
-
 ### Tool Installer
 [[ ! -f "$HOME/.local/bin/oh-my-posh" ]] && curl -s https://ohmyposh.dev/install.sh | bash -s
 [[ ! -f "$HOME/.local/bin/zoxide" ]] && curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
@@ -157,3 +154,6 @@ else
 fi
 
 eval "$(zoxide init --cmd cd zsh)"
+
+# Source system specific shell configuration
+[[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
