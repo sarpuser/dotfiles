@@ -3,3 +3,5 @@
 **/test*
 .config/zsh/zsh-plugins.zsh
 .config/gh
+.ssh/*
+!.ssh/config
