@@ -1,28 +1,47 @@
 ## Overview
 This repository includes configuration files for various programs, as well as setup scripts for Mac and Debian that download all the dependencies and any desired applications, set settings, and copy this dotfiles repository.
 
-### Using the dotfiles without any additional setup
-```bash
-git clone https://www.github.com/sarpuser/dotfiles ~/dotfiles
-stow -d ~/dotfiles .
-chmod +x -R $HOME/dotfiles/.config/git/scripts/ # Needed to use git scripts
-```
-
 #### Requirements
   - [GNU Stow](#gnu-stow)
   - [Hack Nerd Font](https://www.nerdfonts.com/)
   - [Oh-My-Posh](https://ohmyposh.dev/)
+  - [Eza](https://github.com/eza-community/eza)
+  - [Zoxide](https://github.com/ajeetdsouza/zoxide)
+  - [fzf](https://github.com/junegunn/fzf)
 
 > [!IMPORTANT]
 > If using a different terminal emulator, its font should be changed to the Nerd font.
 
 ## Setup Scripts
 
+### Debian/Ubuntu
+This script will install packages, set up dotfiles, install the Hack Nerd Font, set zsh as default, set the locale, and try to set the MOTD. The script ends with switching to zsh.
+
+```bash
+sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/sarpuser/dotfiles/refs/heads/main/scripts/debian-setup.sh)"
+```
+
+<details>
+<summary>Installed packages</summary>
+
+  - curl
+  - eza
+  - fontconfig
+  - fzf
+  - git
+  - gpg
+  - [Optional] speedtest
+  - stow
+  - unzip
+  - [Optional] uv (installed in /opt/cargo and symlinked to /usr/local/bin)
+  - zsh
+</details>
+
 ### Mac
 This script will install Homebrew (if not already installed), install brew & App Store apps, set up terminal environment by cloning this repository, and change settings. The Homebrew apps include desktop apps and if these are found on the Applications directory (installed from a website perhaps), the script will replace the executables with the Homebrew version without app data loss. Each of the script components (Homebrew & apps, terminal, and settings) are opt-in and safe to run multiple times.
 
 ```bash
-sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/sarpuser/dotfiles/refs/heads/main/scripts/debian-setup.sh)"
+sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/sarpuser/dotfiles/refs/heads/main/scripts/mac-setup.sh)"
 ```
 
 <details>
@@ -84,29 +103,6 @@ sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/sarpuser/dotfiles/r
     - Alias `vpn-off` to `wg-quick down <confName>`
   - Bartender configuration
   - Add accounts
-
-### Debian/Ubuntu
-This script will install packages, set up dotfiles, install the Hack Nerd Font, set zsh as default, set the locale, and try to set the MOTD. The script ends with switching to zsh.
-
-```bash
-sudo bash <(curl -s https://raw.githubusercontent.com/sarpuser/dotfiles/refs/heads/main/scripts/debian-setup.sh)
-```
-
-<details>
-<summary>Installed packages</summary>
-
-  - curl
-  - eza
-  - fontconfig
-  - fzf
-  - git
-  - python3
-  - python3-pip
-  - speedtest
-  - stow
-  - uv (installed in /opt/cargo and symlinked to /usr/local/bin)
-  - zsh
-</details>
 
 ## Reference
 

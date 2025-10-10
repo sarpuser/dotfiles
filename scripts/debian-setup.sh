@@ -6,7 +6,7 @@ LOCATION=New_York
 TIMEZONE="America/$LOCATION"
 LOCALE="US/$LOCATION"
 
-PACKAGES="git curl stow fontconfig fzf zsh"
+PACKAGES="git curl stow fontconfig fzf unzip zsh"
 
 # Check if script is run with sudo
 if [ "$(id -u)" -ne 0 ]; then
@@ -20,6 +20,7 @@ set -e
 
 # Display message function
 showMessage() {
+    echo ""
     echo "===================================="
     echo "$1"
     echo "===================================="
