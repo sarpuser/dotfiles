@@ -45,19 +45,20 @@ USER_HOME=$(eval echo ~${ACTUAL_USER})
 showMessage "Setting up system for user: ${ACTUAL_USER}"
 showMessage "User home directory: ${USER_HOME}"
 
-# Update and upgrade packages
-showMessage "Updating and upgrading packages"
-apt update && apt -y upgrade
-
 # Set locale
 showMessage "Setting locale to $LOCALE"
 if ! locale -a | grep -q "en_US.UTF-8"; then
     apt install -y locales
+    sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen
     locale-gen en_US.UTF-8
     update-locale LANG=en_US.UTF-8
 else
     echo "Locale en_US.UTF-8 already configured"
 fi
+
+# Update and upgrade packages
+showMessage "Updating and upgrading packages"
+apt update && apt -y upgrade
 
 # Set timezone if not already set
 if [ "$(timedatectl show --property=Timezone --value)" != "$TIMEZONE" ]; then
