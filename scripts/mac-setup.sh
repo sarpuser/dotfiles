@@ -53,7 +53,7 @@ installApps() {
 
 
 	brewFormulae="defaultbrowser eza fping fzf gh git git-delta mas neofetch picocom pyenv rustup shellcheck speedtest stow wireguard-tools xz zoxide"
-	brewCasks="1password 1password-cli alacritty alfred arc appcleaner balenaetcher bartender betterdisplay dropzone font-hack-nerd-font keyboardcleantool logi-options+ mission-control-plus raspberry-pi-imager spotify visual-studio-code utm zoom"
+	brewCasks="1password 1password-cli alacritty alfred arc appcleaner balenaetcher bartender betterdisplay bettermouse dropzone font-hack-nerd-font keyboardcleantool logi-options+ mission-control-plus raspberry-pi-imager spotify visual-studio-code utm zoom"
 
 	# Problematic for work
 	confirm "Do you want to install Discord?" && brewCasks=$brewCasks" discord" || echo skipping Discord...

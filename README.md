@@ -56,6 +56,7 @@ sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/sarpuser/dotfiles/r
   - [Balena Etcher](https://etcher.balena.io/)
   - [Bartender](https://www.macbartender.com/Bartender5/)
   - [Better Display](https://github.com/waydabber/BetterDisplay)
+  - [Better Mouse](https://better-mouse.com/)
   - \[Optional\] [Copilot](https://copilot.money/)
   - \[Optional\] [Discord](https://www.discord.com)
   - [defaultbrowser](https://github.com/kerma/defaultbrowser)
