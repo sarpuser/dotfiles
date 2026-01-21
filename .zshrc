@@ -154,6 +154,8 @@ else
 fi
 
 eval "$(zoxide init --cmd cd zsh)"
+source <(helm completion zsh)
+source <(kubectl completion zsh)
 
 # Source system specific shell configuration
 [[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
