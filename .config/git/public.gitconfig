@@ -9,6 +9,7 @@
 	recurse = true
 [push]
 	recurseSubmodules = on-demand
+	autoSetupRemote = true
 [fetch]
 	recurseSubmodules = true
 	prune = true
